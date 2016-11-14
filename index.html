@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>TravelMate</title>
+<meta charset="utf-8">
+<meta name"viewport" content="initial-scale=1.0, user-scalable=yes">
+<link rel="icon" href="images/favicon.ico">
+<link rel="shortcut icon" href="images/favicon.ico" />
+<link rel="stylesheet" href="css/contact-form.css">
+<link rel="stylesheet" href="css/touchTouch.css">
+<link rel="stylesheet" href="css/owl.carousel.css">
+<link rel="stylesheet" href="css/style.css">
+<script src="js/jquery.js"></script>
+<script src="js/jquery-migrate-1.1.1.js"></script>
+<script src="js/jquery.easing.1.3.js"></script>
+<script src="js/script.js"></script>
+<script src="js/superfish.js"></script>
+<script src="js/jquery.equalheights.js"></script>
+<script src="js/jquery.mobilemenu.js"></script>
+<script src="js/jquery.ui.totop.js"></script>
+<script src="js/owl.carousel.js"></script>
+<script src="js/touchTouch.jquery.js"></script>
+<script src="js/TMForm.js"></script>
+<script src="js/modal.js"></script>
+<script>
+ (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+ })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ ga('create', 'UA-87258660-1', 'auto');
+ ga('send', 'pageview');
+
+</script>
+
+<script>
+ $(window).load(function(){
+  $().UItoTop({ easingType: 'easeOutQuart' });
+
+  $("#owl").owlCarousel({
+    items : 4, //10 items above 1000px browser width
+    itemsDesktop : [995,1], //5 items between 1000px and 901px
+    itemsDesktopSmall : [767, 1], // betweem 900px and 601px
+    itemsTablet: [700, 1], //2 items between 600 and 0
+    itemsMobile : [479, 1], // itemsMobile disabled - inherit from itemsTablet option
+    navigation : true,
+    pagination :  false
+  });
+    $('.gallery .gall_item').touchTouch();
+ });
+
+
+
+</script>
+<!--[if lt IE 8]>
+ <div style=' clear: both; text-align:center; position: relative;'>
+   <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+     <img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." />
+   </a>
+</div>
+<![endif]-->
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<link rel="stylesheet" media="screen" href="css/ie.css">
+<![endif]-->
+</head>
+
+<body>
+<!--==============================
+              header
+=================================-->
+<header>
+
+
+  <div class="container_12">
+    <div class="grid_12 ">
+      <h2>Najdi si svého parťáka na cestování<br>
+        <span></span>
+      </h2>
+      <p>
+        Poslední výzkumy zjistily, že více než <strong>50%</strong> lidí necestuje, protože nemá s kým.<br />
+        Nenechme se ovliňovat touto skutečností a pojďme s tím něco udělat.
+      
+      </p>
+      
+      <a href="#about" class="btn">Více</a>
+
+   </div>
+    <div class="clear"></div>
+  </div>
+</header>
+<!--=====================
+          Content
+======================-->
+
+
+<section id="about" class="page">
+  <div class="about_inset__1">
+    <div class="container_12">
+      <div class="grid_12">
+        <h3 class="head__1">Jak na to</h3>
+        <div class="story">
+          <div class="grid_6 alpha">
+            <div class="block-1">
+              <time datetime="2014-01-01" class="cornered">1</time>
+              <div class="extra_wrapper">
+                <div class="text1 tx__1">Vyplníte dotazník</div>
+                Vyplníte dotazník krátkými otázkami. A odešlete ho do naší databáze.
+              </div>
+            </div>
+            <div class="block-1">
+              <time datetime="2014-01-01" class="cornered">3</time>
+              <div class="extra_wrapper">
+                <div class="text1 tx__1">Spojíme vás</div>
+                Vyhodnotíme dotazníky a spojíme vás s lidmi s podobnými zájmy.
+              </div>
+            </div>
+          </div>
+          <div class="grid_6 omega">
+            <div class="block-1 inset__1">
+              <time datetime="2014-01-01" class="cornered">2</time>
+              <div class="extra_wrapper">
+                <div class="text1 tx__1">Někdo další vyplní dotazník</div>
+                Stejným způsobem jako Vy. A odešle ho do naší databáze.
+              </div>
+            </div>
+          </div>
+          <div class="clear"></div>
+
+          <div class="cornered pos__1">Sejdete se <br>a začínáme!</div>
+        </div>
+      <div class="clear"></div>
+    </div>      
+    <div class="clear"></div>
+    </div><a href="#dotaznik" class="btn" style="margin-top: 120px;">Dále</a>
+  </div>
+  <div class="about_bg__1">
+    <div id="dotaznik" class="container_12">
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe3arRfFgkZi1gog0CxNH1NHKS1nxoQivR8O9Cst0LUeoHZdg/viewform?embedded=true" width="100%" height="1600px" frameborder="0" marginheight="0" marginwidth="0" style="margin:auto;margin-top:40px;">Loading...</iframe>
+
+      <div class="clear"></div>
+    </div> 
+  </div>
+</section>
+
+<!--==============================
+              footer
+=================================-->
+
+<a href="#" id="toTop" class="fa fa-chevron-up"></a>
+<script src="js/jquery.singlePageNav.min.js"></script>
+        <script>
+
+            // Prevent console.log from generating errors in IE for the purposes of the demo
+            if ( ! window.console ) console = { log: function(){} };
+
+            // The actual plugin
+            $('body').singlePageNav({
+                offset: $('.single-page-nav').outerHeight(),
+                filter: ':not(.external)',
+                updateHash: true,
+                beforeStart: function() {
+                    console.log('begin scrolling');
+                },
+                onComplete: function() {
+                    console.log('done scrolling');
+                }
+            });
+        </script>
+</body>
+</html>
