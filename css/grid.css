@@ -14,9 +14,6 @@
   Note: IE6 works fine without this fix.
 */
 
-body {
-  min-width: 1200px;
-}
 
 /* Containers
 ----------------------------------------------------------------------------------------------------*/
@@ -500,4 +497,13 @@ q:after {
 table {
   border-collapse: collapse;
   border-spacing: 0;
+}
+@media screen and (max-width: 1200px) {
+    .container_12 {
+        width: 100%;
+    }
+    .grid_12, .grid_6 {
+        width: 100% !important;
+        margin-left: 0px;
+    }
 }
