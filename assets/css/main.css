@@ -2643,6 +2643,7 @@
 		.wrapper.style1 {
 			background-color: #ed4933;
 			color: #c7ebe8;
+            height: 100vh;
 		}
 
 			.wrapper.style1 strong, .wrapper.style1 b {
