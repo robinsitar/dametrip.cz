@@ -124,17 +124,38 @@
         })
         
         $(".formularDalsi").on("click", function() {
-         if($(".formularInput").val() !== "" ) {
+         if($(".formularInput.active").val() !== "" ) {
+           
              
-            $(".formularInput").val("") 
-            var next = $("p.active").next();
-            $("p.active").removeClass("active");
-            next.addClass("active");
+            if($(".formularOtazkaWrapper.active").hasClass("posledni")){
+                $(".formularInput.active").hide();
+                $(".formularDalsi").hide();
+                $(".endingText").fadeIn(500);
+                
+                
+            }
+             if($(".formularOtazkaWrapper.active").hasClass("predposledni")){
+                $(".formularDalsiText").text("Odeslat");
+                $(".formularDalsiSipka").attr("src", "assets/css/images/arrow-r.svg")  
+                
+            }
             
-            $(".formularInput").hide();
-            $(".p.active").hide();
-
-            $(".formularInput").fadeIn(500);
-            $(".p.active").fadeIn(500);
+            
+            $(".formularOtazkaWrapper.active").hide();
+            var nextOtazka = $(".formularOtazkaWrapper.active").next();
+            $(".formularOtazkaWrapper.active").removeClass("active");
+            $(".formularInput.active").removeClass("active")
+            var nextInput = nextOtazka.find(".formularInput");
+            nextInput.addClass("active");
+            nextOtazka.addClass("active");
+            nextOtazka.hide();
+            nextOtazka.fadeIn(500);
+             $(".formularImg").attr('src', 'images/cross.png');
+                indicator = true;
+            $(".formularInput.active").focus();
+            
+            
+            
+             
          }
         })
