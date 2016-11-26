@@ -98,8 +98,25 @@
 	});
 
 })(jQuery);
-
-
+        var indicator = true;
+        $(".formularInput").on('input propertychange', function() {
+          if($(".formularInput").val() !== "" ) {
+          if(indicator == true ) {
+               $(".formularImg").attr('src', 'images/animace.gif');
+          
+            setTimeout(function() {
+               $(".formularImg").attr('src', 'images/tick.png');
+                indicator = false
+              
+            },1840)
+           }
+          }
+            else if($(".formularInput").val() == "" ){
+                $(".formularImg").attr('src', 'images/cross.png');
+                indicator = true;
+            }
+        }) 
+       
         $(".formularDalsi").hover(function() {
             $(".formularDalsiSipka").animate({"marginTop":"34px"},300)
         },function() {

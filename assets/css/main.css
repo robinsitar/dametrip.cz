@@ -1680,7 +1680,6 @@
 		border-radius: 3px;
 		border: none;
 		color: inherit;
-		display: block;
 		outline: 0;
 		padding: 0 1em;
 		text-decoration: none;
@@ -3839,6 +3838,7 @@
 }
 .formularInput {
     font-size: 23px;
+    display: inline-block;
 }
 .formularDalsi {
     height: 128px;
@@ -3856,4 +3856,15 @@
 }
 .formularDalsiSipka {
     margin-top: 20px;
+}
+.formularImg {
+    display: inline-block;
+    width: 50px;
+    height: 40px;
+    position: absolute;
+    bottom: 20px;
+    margin-left: 8px;
+}
+.formularWrapper {
+    position:relative;
 }
