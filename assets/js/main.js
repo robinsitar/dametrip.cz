@@ -99,44 +99,98 @@
 
 })(jQuery);
         var indicator = true;
+        var timeoutGif = "";
         $(".formularInput").on('input propertychange', function() {
-          if($(".formularInput").val() !== "" ) {
-          if(indicator == true ) {
-               $(".formularImg").attr('src', 'images/animace.gif');
-          
-            setTimeout(function() {
-               $(".formularImg").attr('src', 'images/tick.png');
-                indicator = false
+          if($(".formularInput.active").val() !== "" ) {
               
-            },1840)
+            if(indicator == true) {
+               $(".formularImg.active").attr('src', 'images/animace.gif');
+               indicator = false;
+              
+            timeoutGif = setTimeout(function() {
+                if($(".formularInput.active").val() !== "" ) {
+               $(".formularImg.active").attr('src', 'images/tick.png');
+                }
+            },1800)
            }
           }
-            else if($(".formularInput").val() == "" ){
-                $(".formularImg").attr('src', 'images/cross.png');
+            
+         else if($(".formularInput.active").val() == "") {
+                $(".formularImg.active").attr('src', 'images/cross.png');
                 indicator = true;
+                clearTimeout(timeoutGif);
             }
+            
         }) 
        
-        $(".formularDalsi").hover(function() {
+        $(".formularDalsiWrapper").hover(function() {
             $(".formularDalsiSipka").animate({"marginTop":"34px"},300)
         },function() {
             $(".formularDalsiSipka").animate({"marginTop":"20px"},150)
         })
         
-        $(".formularDalsi").on("click", function() {
-         if($(".formularInput.active").val() !== "" ) {
+        $(".formularPredchozi").hover(function() {
+            $(".formularPredchoziSipka").animate({"marginTop":"0px"},300)
+        },function() {
+            $(".formularPredchoziSipka").animate({"marginTop":"19px"},150)
+        })
+        
+        $(".formlularDalsi").click(function() {
+            
+        })
+        
+        function prevOtazka() {
+           if($(".formularOtazkaWrapper.active").hasClass("posledni")){
+                $(".formularDalsiText").text("Další Otázka");
+                $(".formularKonecnaSipka").hide();
+                $(".formularDalsiSipka").show();
+            }      
+        
+           $(".formularOtazkaWrapper.active").hide();
+           var prevOtazka = $(".formularOtazkaWrapper.active").prev(); 
+           $(".formularOtazkaWrapper.active").removeClass("active");
+           $(".formularInput.active").removeClass("active")
+           $(".formularImg.active").removeClass("active")
            
-             
+           prevOtazka.addClass("active");
+           prevOtazka.hide();
+           prevOtazka.fadeIn(500);
+           var prevInput = prevOtazka.find(".formularInput");
+           prevInput.addClass("active");
+           var prevImg = prevOtazka.find(".formularImg");
+           prevImg.addClass("active");
+           $(".formularImg.active").attr('src', 'images/tick.png');
+           indicator = false;
+
+           if($(".formularOtazkaWrapper.active").hasClass("prvni")){
+                $(".formularPredchozi").hide();
+            }
+        }
+        
+        function nextOtazka() {
+         if($(".formularInput.active").val() !== "") {
+           
+            if($(".formularOtazkaWrapper.active").hasClass("prvni")){
+                $(".formularPredchozi").fadeIn(500);
+            } 
             if($(".formularOtazkaWrapper.active").hasClass("posledni")){
                 $(".formularInput.active").hide();
                 $(".formularDalsi").hide();
+                $(".formularPredchozi").hide();
                 $(".endingText").fadeIn(500);
-                
-                
+   
             }
              if($(".formularOtazkaWrapper.active").hasClass("predposledni")){
+                
                 $(".formularDalsiText").text("Odeslat");
-                $(".formularDalsiSipka").attr("src", "assets/css/images/arrow-r.svg")  
+                $(".formularDalsiSipka").hide();
+                $(".formularKonecnaSipka").show();
+                
+                $(".formularDalsi").hover(function() {
+                    $(".formularKonecnaSipka").animate({"marginLeft":"30px"},300)
+                },function() {
+                    $(".formularKonecnaSipka").animate({"marginLeft":"0px"},150)
+                }) 
                 
             }
             
@@ -145,17 +199,37 @@
             var nextOtazka = $(".formularOtazkaWrapper.active").next();
             $(".formularOtazkaWrapper.active").removeClass("active");
             $(".formularInput.active").removeClass("active")
-            var nextInput = nextOtazka.find(".formularInput");
-            nextInput.addClass("active");
+            $(".formularImg.active").removeClass("active")
             nextOtazka.addClass("active");
             nextOtazka.hide();
             nextOtazka.fadeIn(500);
-             $(".formularImg").attr('src', 'images/cross.png');
-                indicator = true;
+            var nextInput = nextOtazka.find(".formularInput");
+            nextInput.addClass("active");
+            var nextImg = nextOtazka.find(".formularImg");
+            nextImg.addClass("active");
+             
+            indicator = true;
             $(".formularInput.active").focus();
-            
-            
-            
+                  
              
          }
+        }
+
+        $(".formularPredchozi").on("click", function() {
+            prevOtazka()
+        })        
+
+        $(".formularDalsiWrapper").on("click", function() {
+            nextOtazka()
         })
+        
+        $("body").on("keyup",function(e) {   
+            if(e.keyCode == 13 || e.keyCode == 40) {
+                nextOtazka();
+            }
+            if(e.keyCode == 38) {
+             if($(".formularOtazkaWrapper.active").hasClass("prvni") == false){
+                prevOtazka();
+             }
+            }
+        });

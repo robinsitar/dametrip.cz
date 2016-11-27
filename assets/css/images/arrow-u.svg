@@ -1,0 +1,16 @@
+<svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+ <style type="text/css">
+  <![CDATA[ line { stroke: #ffffff; stroke-width: 3; } ]]>
+ </style>
+
+ <g>
+  <title>background</title>
+  <rect x="-1" y="-1" width="32" height="32" id="canvas_background" fill="none"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <line x1="14.345849" y1="0.612521" x2="29.345849" y2="15.612521" id="svg_1"/>
+  <line x1="14.875077" y1="0.625073" x2="-0.124923" y2="15.625073" id="svg_2"/>
+  <line x1="14.625002" y1="30.749996" x2="14.625002" y2="0.749996" id="svg_3" transform="rotate(-180 14.625001907348635,15.749996185302733) "/>
+ </g>
+</svg>
