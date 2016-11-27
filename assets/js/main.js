@@ -152,6 +152,7 @@
            var prevOtazka = $(".formularOtazkaWrapper.active").prev();
            $(".formularOtazkaWrapper.active").hide("slide", { direction: "down" }, 1000);
            $(".formularOtazkaWrapper.active").removeClass("active");
+           $(".formularInput.active").blur();
            $(".formularInput.active").removeClass("active")
            $(".formularImg.active").removeClass("active")
            
@@ -160,13 +161,16 @@
            prevOtazka.delay(1100).show("slide", { direction: "up" }, 1000);
            var prevInput = prevOtazka.find(".formularInput");
            prevInput.addClass("active");
+           setTimeout(function() {
+                prevInput.focus();
+            },2100)
            var prevImg = prevOtazka.find(".formularImg");
            prevImg.addClass("active");
            $(".formularImg.active").attr('src', 'images/tick.png');
            indicator = false;
 
            if($(".formularOtazkaWrapper.active").hasClass("prvni")){
-                $(".formularPredchozi").hide();
+                $(".formularPredchozi").fadeOut(500);
             }
         }
         
@@ -174,7 +178,7 @@
          if($(".formularInput.active").val() !== "") {
              
             if($(".formularOtazkaWrapper.active").hasClass("prvni")){
-                $(".formularPredchozi").show();
+                $(".formularPredchozi").fadeIn(500);
             } 
            
             if($(".formularOtazkaWrapper.active").hasClass("posledni")){
@@ -211,7 +215,9 @@
             nextOtazka.delay(1100).show("slide", { direction: "down" }, 1000);
             var nextInput = nextOtazka.find(".formularInput");
             nextInput.addClass("active");
-            nextInput.focusin();
+            setTimeout (function() {
+                nextInput.focus();
+            },2100)
             var nextImg = nextOtazka.find(".formularImg");
             nextImg.addClass("active");
            }
