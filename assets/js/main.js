@@ -99,7 +99,6 @@
 
 })(jQuery);
         var indicator = true;
-        var timeoutGif = "";
         $(".formularInput").on('input propertychange', function() {
           if($(".formularInput.active").val() !== "" ) {
               
@@ -107,7 +106,7 @@
                $(".formularImg.active").attr('src', 'images/animace.gif');
                indicator = false;
               
-            timeoutGif = setTimeout(function() {
+            setTimeout(function() {
                 if($(".formularInput.active").val() !== "" ) {
                $(".formularImg.active").attr('src', 'images/tick.png');
                 }
@@ -118,7 +117,6 @@
          else if($(".formularInput.active").val() == "") {
                 $(".formularImg.active").attr('src', 'images/cross.png');
                 indicator = true;
-                clearTimeout(timeoutGif);
             }
             
         }) 
@@ -127,6 +125,12 @@
             $(".formularDalsiSipka").animate({"marginTop":"34px"},300)
         },function() {
             $(".formularDalsiSipka").animate({"marginTop":"20px"},150)
+        })
+        
+        $(".formularDalsiWrapper").hover(function() {
+                    $(".formularKonecnaSipka").animate({"marginLeft":"30px"},300)
+        },function() {
+                    $(".formularKonecnaSipka").animate({"marginLeft":"0px"},150)
         })
         
         $(".formularPredchozi").hover(function() {
@@ -184,13 +188,7 @@
                 
                 $(".formularDalsiText").text("Odeslat");
                 $(".formularDalsiSipka").hide();
-                $(".formularKonecnaSipka").show();
-                
-                $(".formularDalsi").hover(function() {
-                    $(".formularKonecnaSipka").animate({"marginLeft":"30px"},300)
-                },function() {
-                    $(".formularKonecnaSipka").animate({"marginLeft":"0px"},150)
-                }) 
+                $(".formularKonecnaSipka").show(); 
                 
             }
             
