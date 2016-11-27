@@ -3811,7 +3811,10 @@
 	body.is-mobile.landing #footer {
 		background-color: #1d242a;
 	}
-
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
     .formular {
         height: 170px;
         background-color: rgba(237, 73, 51, 0.9);
@@ -3834,6 +3837,7 @@
 }
 .formularOtazkaWrapper {
     display: none;
+    height: 270px;
 }
 .active {
     display: block;
@@ -3911,4 +3915,8 @@
     font-size: 30px;
     display: none;
     color: white;
+}
+.extraSpace {
+    height: 300px;
+    display: none;
 }

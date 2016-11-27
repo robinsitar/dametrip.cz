@@ -1,9 +1,3 @@
-/*
-	Spectral by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
-*/
-
 (function($) {
 
 	skel
@@ -100,6 +94,32 @@
 })(jQuery);
         var indicator = true;
         $(".formularInput").on('input propertychange', function() {
+            kontrolOtazka();
+        }) 
+       
+        $(".formularDalsiWrapper").hover(function() {
+            $(".formularDalsiSipka").animate({"marginTop":"34px"},300)
+        },function() {
+            $(".formularDalsiSipka").animate({"marginTop":"20px"},150)
+        })
+        
+        $(".formularDalsiWrapper").hover(function() {
+                    $(".formularKonecnaSipka").animate({"marginLeft":"30px"},300)
+        },function() {
+                    $(".formularKonecnaSipka").animate({"marginLeft":"0px"},150)
+        })
+        
+        $(".formularPredchozi").hover(function() {
+            $(".formularPredchoziSipka").animate({"marginTop":"0px"},400)
+        },function() {
+            $(".formularPredchoziSipka").animate({"marginTop":"19px"},150)
+        })
+        
+        $(".formlularDalsi").click(function() {
+            
+        })
+        
+        function kontrolOtazka() {
           if($(".formularInput.active").val() !== "" ) {
               
             if(indicator == true) {
@@ -119,29 +139,8 @@
                 indicator = true;
             }
             
-        }) 
-       
-        $(".formularDalsiWrapper").hover(function() {
-            $(".formularDalsiSipka").animate({"marginTop":"34px"},300)
-        },function() {
-            $(".formularDalsiSipka").animate({"marginTop":"20px"},150)
-        })
-        
-        $(".formularDalsiWrapper").hover(function() {
-                    $(".formularKonecnaSipka").animate({"marginLeft":"30px"},300)
-        },function() {
-                    $(".formularKonecnaSipka").animate({"marginLeft":"0px"},150)
-        })
-        
-        $(".formularPredchozi").hover(function() {
-            $(".formularPredchoziSipka").animate({"marginTop":"0px"},300)
-        },function() {
-            $(".formularPredchoziSipka").animate({"marginTop":"19px"},150)
-        })
-        
-        $(".formlularDalsi").click(function() {
-            
-        })
+        }
+        kontrolOtazka();
         
         function prevOtazka() {
            if($(".formularOtazkaWrapper.active").hasClass("posledni")){
@@ -150,15 +149,15 @@
                 $(".formularDalsiSipka").show();
             }      
         
-           $(".formularOtazkaWrapper.active").hide();
-           var prevOtazka = $(".formularOtazkaWrapper.active").prev(); 
+           var prevOtazka = $(".formularOtazkaWrapper.active").prev();
+           $(".formularOtazkaWrapper.active").hide("slide", { direction: "down" }, 1000);
            $(".formularOtazkaWrapper.active").removeClass("active");
            $(".formularInput.active").removeClass("active")
            $(".formularImg.active").removeClass("active")
            
            prevOtazka.addClass("active");
            prevOtazka.hide();
-           prevOtazka.fadeIn(500);
+           prevOtazka.delay(1100).show("slide", { direction: "up" }, 1000);
            var prevInput = prevOtazka.find(".formularInput");
            prevInput.addClass("active");
            var prevImg = prevOtazka.find(".formularImg");
@@ -173,15 +172,16 @@
         
         function nextOtazka() {
          if($(".formularInput.active").val() !== "") {
-           
+             
             if($(".formularOtazkaWrapper.active").hasClass("prvni")){
-                $(".formularPredchozi").fadeIn(500);
+                $(".formularPredchozi").show();
             } 
+           
             if($(".formularOtazkaWrapper.active").hasClass("posledni")){
-                $(".formularInput.active").hide();
-                $(".formularDalsi").hide();
-                $(".formularPredchozi").hide();
-                $(".endingText").fadeIn(500);
+                $(".formularOtazkaWrapper.active").hide("slide", { direction: "left" }, 1000);
+                $(".formularDalsi").slideUp(1000);
+                $(".formularPredchozi").slideUp(1000);
+                $(".endingText").delay(1100).show("slide", { direction: "right" }, 1000);;
    
             }
              if($(".formularOtazkaWrapper.active").hasClass("predposledni")){
@@ -192,22 +192,42 @@
                 
             }
             
-            
-            $(".formularOtazkaWrapper.active").hide();
+           if($(".formularOtazkaWrapper.active").hasClass("posledni") == false) {    
             var nextOtazka = $(".formularOtazkaWrapper.active").next();
-            $(".formularOtazkaWrapper.active").removeClass("active");
-            $(".formularInput.active").removeClass("active")
-            $(".formularImg.active").removeClass("active")
+            $(".formularOtazkaWrapper.active").hide("slide", { direction: "up" }, 1000);
+            if($(".formularOtazkaWrapper.active").hasClass("prvni")){
+               setTimeout(function() {
+                 $(".formularOtazkaWrapper.active").prev().removeClass("active");  
+               },2000)
+            } 
+             else {
+               $(".formularOtazkaWrapper.active").removeClass("active");
+             }
+            $(".formularInput.active").blur();
+            $(".formularInput.active").removeClass("active");
+            $(".formularImg.active").removeClass("active");
             nextOtazka.addClass("active");
             nextOtazka.hide();
-            nextOtazka.fadeIn(500);
+            nextOtazka.delay(1100).show("slide", { direction: "down" }, 1000);
             var nextInput = nextOtazka.find(".formularInput");
             nextInput.addClass("active");
+            nextInput.focusin();
             var nextImg = nextOtazka.find(".formularImg");
             nextImg.addClass("active");
+           }
              
-            indicator = true;
-            $(".formularInput.active").focus();
+            //Když zůstanou data 
+            if($(".formularInput.active").val() !== "" ) {    
+            if(indicator == true) {
+               $(".formularImg.active").attr('src', 'images/tick.gif');
+               indicator = false;
+            }
+           }
+            
+            else if($(".formularInput.active").val() == "") {
+                $(".formularImg.active").attr('src', 'images/cross.png');
+                indicator = true;
+            }
                   
              
          }
