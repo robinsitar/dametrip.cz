@@ -142,13 +142,16 @@
         }
         kontrolOtazka();
         
+        activator = true;
         function prevOtazka() {
+          if(activator == true) {
            if($(".formularOtazkaWrapper.active").hasClass("posledni")){
                 $(".formularDalsiText").text("Další Otázka");
                 $(".formularKonecnaSipka").hide();
                 $(".formularDalsiSipka").show();
             }      
         
+           activator = false;      
            var prevOtazka = $(".formularOtazkaWrapper.active").prev();
            $(".formularOtazkaWrapper.active").hide("slide", { direction: "down" }, 1000);
            $(".formularOtazkaWrapper.active").removeClass("active");
@@ -163,6 +166,7 @@
            prevInput.addClass("active");
            setTimeout(function() {
                 prevInput.focus();
+                activator = true;
             },2100)
            var prevImg = prevOtazka.find(".formularImg");
            prevImg.addClass("active");
@@ -172,10 +176,11 @@
            if($(".formularOtazkaWrapper.active").hasClass("prvni")){
                 $(".formularPredchozi").fadeOut(500);
             }
+          }
         }
         
         function nextOtazka() {
-         if($(".formularInput.active").val() !== "") {
+         if($(".formularInput.active").val() !== "" && activator == true) {
              
             if($(".formularOtazkaWrapper.active").hasClass("prvni")){
                 $(".formularPredchozi").fadeIn(500);
@@ -196,17 +201,11 @@
                 
             }
             
+            activator = false;
            if($(".formularOtazkaWrapper.active").hasClass("posledni") == false) {    
             var nextOtazka = $(".formularOtazkaWrapper.active").next();
             $(".formularOtazkaWrapper.active").hide("slide", { direction: "up" }, 1000);
-            if($(".formularOtazkaWrapper.active").hasClass("prvni")){
-               setTimeout(function() {
-                 $(".formularOtazkaWrapper.active").prev().removeClass("active");  
-               },2000)
-            } 
-             else {
-               $(".formularOtazkaWrapper.active").removeClass("active");
-             }
+            $(".formularOtazkaWrapper.active").removeClass("active");
             $(".formularInput.active").blur();
             $(".formularInput.active").removeClass("active");
             $(".formularImg.active").removeClass("active");
@@ -217,6 +216,7 @@
             nextInput.addClass("active");
             setTimeout (function() {
                 nextInput.focus();
+                activator = true;
             },2100)
             var nextImg = nextOtazka.find(".formularImg");
             nextImg.addClass("active");
@@ -224,10 +224,8 @@
              
             //Když zůstanou data 
             if($(".formularInput.active").val() !== "" ) {    
-            if(indicator == true) {
-               $(".formularImg.active").attr('src', 'images/tick.gif');
+               $(".formularImg.active").attr('src', 'images/tick.png');
                indicator = false;
-            }
            }
             
             else if($(".formularInput.active").val() == "") {
