@@ -1,11 +1,13 @@
 <?php
-    
+    //TODO:
+    //udělat nějakou zabezpečovací funkci, kterou se budou prohánět všechny user inputy.
+
     $mysqlLogin="root";
     $mysqlHeslo="";
     $mysqlDatabase="dametrip";
     $mysqlServer="localhost";
     
-    function reset(){
+    function reset(){ //vyčistění databáze
         loguj("RESET DATABÁZE!!!");
         //tabulka
         $dotaz="DROP TABLE lidi;";
@@ -22,11 +24,39 @@
                 DestinaceStat TEXT,
                 DestinaceMesto TEXT,);";
         $ok=dotaz($dotaz);
+        if($ok){
+            return true;
+        }else{
+            return false;
+        }
         
     }
     
-    function pridej($Jmeno, $Vek, $Email,$Pohlavi, $BydlisteStat, $BydlisteMesto, $Cinnost, $DestinaceStat, $DestinaceMesto){
+    function pridej($Jmeno, $Vek, $Email,$Pohlavi, $BydlisteStat, $BydlisteMesto, $Cinnost, $DestinaceStat, $DestinaceMesto){ //přidá uživatele do databáze
         $vysledek=dotaz("SELECT Id FROM lidi ORDER BY Id DESC;");
+        $nextId=mysqli_fetch_array($vysledek)[0]+1;
+        $ok=dotaz("INSERT INTO lidi VALUES($nextId,'$Jmeno',$Vek,'$Email',$Pohlavi,'$BydlisteStat','$BydlisteMesto','$Cinnost','$DestinaceStat','$DestinaceMesto')");
+        if($ok){
+            return true;
+        }else{
+            return false;
+        }
+        
+    }
+
+    function smaz($id){
+        if($id=="" or !$id){return false;}
+        $ok=dotaz("DELETE FROM lidi WHERE Id=$id;");    
+        if($ok){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    function uprav($id, $Jmeno, $Vek, $Email,$Pohlavi, $BydlisteStat, $BydlisteMesto, $Cinnost, $DestinaceStat, $DestinaceMesto){
+        dotaz("UPDATE lidi SET Jmeno='$Jmeno', Vek='$Vek', Email='$Email', Pohlavi='$Pohlavi', BydlisteStat='$BydlisteStat', BydlisteMesto='$BydlisteMesto', Cinnost='$DestinaceStat', DestinaceMesto='$DestinaceMesto';");
+        
     }
 
     function dotaz($dotaz){
@@ -53,6 +83,15 @@
 
     function loguj($zapis){
         //echo $zapis;
+        $fp=fopen("log.txt","a");
+        fwrite($fp, "$zapis ");
+        fclose($fp);
     }
+
+    function poslimail ($od, $komu, $predmet, $zprava )
+    {
+        mail($komu,$predmet,$zprava,$od);
+    }
+
 
 ?>
