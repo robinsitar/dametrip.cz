@@ -7,7 +7,9 @@
     $mysqlDatabase="dametrip";
     $mysqlServer="localhost";
     
-    function reset(){ //vyčistění databáze
+    poslimail("team@dametrip.cz","krystof.mitka@seznam.cz","testik","dobrý den pane mitka blablablabla.");
+
+    function inicializovat(){ //vyčistění databáze
         loguj("RESET DATABÁZE!!!");
         //tabulka
         $dotaz="DROP TABLE lidi;";
@@ -60,7 +62,7 @@
     }
 
     function dotaz($dotaz){
-        public $link;
+        global $link;
         if(!$link){prihlasit();}
         loguj("Spouštím dotaz: $dotaz");
         $vysledek=mysqli_query($link, $dotaz);
@@ -75,21 +77,22 @@
     }
 
     function prihlasit(){
-        public $mysqlLogin, $mysqlHeslo, $mysqlServer, $mysqlDatabase, $link;
+        global $mysqlLogin, $mysqlHeslo, $mysqlServer, $mysqlDatabase, $link;
         $link=mysqli_connect($mysqlAdress,$mysqlLogin, $mysqlPassword);
         $ok=mysqli_select_db($link, $mysqlDatabase);
         return $link;
     }
 
     function loguj($zapis){
-        //echo $zapis;
+        echo $zapis;
         $fp=fopen("log.txt","a");
-        fwrite($fp, "$zapis ");
+        fwrite($fp, "$zapis \n");
         fclose($fp);
     }
 
-    function poslimail ($od, $komu, $predmet, $zprava )
+    function poslimail($od, $komu, $predmet, $zprava )
     {
+        loguj("posílám mail: od $od na mail $komu. predmet: $predmet, text: $zprava");
         mail($komu,$predmet,$zprava,$od);
     }
 
