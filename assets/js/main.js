@@ -153,7 +153,7 @@
         
            activator = false;      
            var prevOtazka = $(".formularOtazkaWrapper.active").prev();
-           $(".formularOtazkaWrapper.active").hide("slide", { direction: "down" }, 1000);
+           $(".formularOtazkaWrapper.active").hide("slide", { direction: "down" }, 800);
            $(".formularOtazkaWrapper.active").removeClass("active");
            $(".formularInput.active").blur();
            $(".formularInput.active").removeClass("active")
@@ -161,13 +161,13 @@
            
            prevOtazka.addClass("active");
            prevOtazka.hide();
-           prevOtazka.delay(1100).show("slide", { direction: "up" }, 1000);
+           prevOtazka.delay(850).show("slide", { direction: "up" }, 800);
            var prevInput = prevOtazka.find(".formularInput");
            prevInput.addClass("active");
            setTimeout(function() {
                 prevInput.focus();
                 activator = true;
-            },2100)
+            },1800)
            var prevImg = prevOtazka.find(".formularImg");
            prevImg.addClass("active");
            $(".formularImg.active").attr('src', 'images/tick.png');
@@ -204,20 +204,20 @@
             activator = false;
            if($(".formularOtazkaWrapper.active").hasClass("posledni") == false) {    
             var nextOtazka = $(".formularOtazkaWrapper.active").next();
-            $(".formularOtazkaWrapper.active").hide("slide", { direction: "up" }, 1000);
+            $(".formularOtazkaWrapper.active").hide("slide", { direction: "up" }, 800);
             $(".formularOtazkaWrapper.active").removeClass("active");
             $(".formularInput.active").blur();
             $(".formularInput.active").removeClass("active");
             $(".formularImg.active").removeClass("active");
             nextOtazka.addClass("active");
             nextOtazka.hide();
-            nextOtazka.delay(1100).show("slide", { direction: "down" }, 1000);
+            nextOtazka.delay(850).show("slide", { direction: "down" }, 800);
             var nextInput = nextOtazka.find(".formularInput");
             nextInput.addClass("active");
             setTimeout (function() {
                 nextInput.focus();
                 activator = true;
-            },2100)
+            },1800)
             var nextImg = nextOtazka.find(".formularImg");
             nextImg.addClass("active");
            }
