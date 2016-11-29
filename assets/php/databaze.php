@@ -4,7 +4,6 @@
     //automatchování
     //validace
     //mezera ve jméně
-    //
 
     $mysqlLogin="root";
     $mysqlHeslo="";
@@ -26,7 +25,8 @@
                 Cinnost TEXT,
                 DestinaceStat TEXT,
                 DestinaceMesto TEXT,
-                Validovano INT);";
+                Validovano INT,
+                Kod TEXT);";
         $ok=dotaz($dotaz);
         if($ok){
             return true;
@@ -40,9 +40,11 @@
         loguj("Přidávám nového uživatele do databáze....");
         $vysledek=dotaz("SELECT Id FROM lidi ORDER BY Id DESC;");
         $nextId=mysqli_fetch_array($vysledek)[0]+1;
-        $ok=dotaz("INSERT INTO lidi VALUES($nextId,'$Jmeno',$Vek,'$Email','$BydlisteStat','$BydlisteMesto','$Cinnost','$DestinaceStat','$DestinaceMesto',0)");
+        $kod=rand(1000000,999999);
+        $ok=dotaz("INSERT INTO lidi VALUES($nextId,'$Jmeno',$Vek,'$Email','$BydlisteStat','$BydlisteMesto','$Cinnost','$DestinaceStat','$DestinaceMesto',0,$kod)");
         
         if($ok){
+            posliMail("team@dametrip.cz",$Email,"Dámetrip.cz - Potvrzení emailové adresy","http://beta.dametrip.cz/validace.php?kod=$kod");
             return true;
         }else{
             return false;
@@ -60,8 +62,8 @@
         }
     }
 
-    function uprav($id, $Jmeno, $Vek, $Email,$Pohlavi, $BydlisteStat, $BydlisteMesto, $Cinnost, $DestinaceStat, $DestinaceMesto){
-        dotaz("UPDATE lidi SET Jmeno='$Jmeno', Vek='$Vek', Email='$Email', Pohlavi='$Pohlavi', BydlisteStat='$BydlisteStat', BydlisteMesto='$BydlisteMesto', Cinnost='$DestinaceStat', DestinaceMesto='$DestinaceMesto';");
+    function uprav($id, $Jmeno, $Vek, $Email,$Pohlavi, $BydlisteStat, $BydlisteMesto, $Cinnost, $DestinaceStat, $DestinaceMesto, $Validovano, $Kod){
+        dotaz("UPDATE lidi SET Jmeno='$Jmeno', Vek='$Vek', Email='$Email', Pohlavi='$Pohlavi', BydlisteStat='$BydlisteStat', BydlisteMesto='$BydlisteMesto', Cinnost='$DestinaceStat', DestinaceMesto='$DestinaceMesto', Validovano=$Validovano, Kod="$Kod";");
         
     }
 
@@ -83,13 +85,13 @@
 
     function prihlasit(){
         global $mysqlLogin, $mysqlHeslo, $mysqlServer, $mysqlDatabase, $link;
-        $link=mysqli_connect($mysqlAdress,$mysqlLogin, $mysqlPassword);
+        $link=mysqli_connect($mysqlServer,$mysqlLogin, $mysqlHeslo);
         $ok=mysqli_select_db($link, $mysqlDatabase);
         return $link;
     }
 
     function loguj($zapis){
-        echo $zapis;
+        echo "$zapis<br />";
         $fp=fopen("log.txt","a");
         fwrite($fp, "$zapis \n");
         fclose($fp);

@@ -19,8 +19,8 @@
         <?php
             if(isset($_REQUEST["cudlik"])){
                 if($_REQUEST["kontrola1"]==$_REQUEST["kontrola1"]){
-                    pridat($_REQUEST["Jmeno"],$_REQUEST["Vek"],$_REQUEST["Email"],$_REQUEST["Bydliste"],"",$_REQUEST["Cinnost"],$_REQUEST["Destinace"],0);
-                    posliMail("team@dametrip.cz",$_REQUEST["Email"],"Validace","tady bude odkaz na validaci.");
+                    pridej($_REQUEST["Jmeno"],$_REQUEST["Vek"],$_REQUEST["Email"],$_REQUEST["Bydliste"],"",$_REQUEST["Cinnost"],$_REQUEST["Destinace"],0);
+                    
                 }else{
                     echo "špatně jste odpověděl na bezpečnostní otázku";
                 }
@@ -35,7 +35,7 @@
                 for($sloupec=0; $sloupec<$sloupcu; $sloupec++){
                     echo "<td>".$dataRadku[$sloupec]."</td>";
                 }
-                echo "</tr>"¨;
+                echo "</tr>";
             }
             echo "</table>";
         ?>
