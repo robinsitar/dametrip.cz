@@ -1,13 +1,15 @@
 <?php
     //TODO:
     //udělat nějakou zabezpečovací funkci, kterou se budou prohánět všechny user inputy.
+    //automatchování
+    //validace
+    //mezera ve jméně
+    //
 
     $mysqlLogin="root";
     $mysqlHeslo="";
     $mysqlDatabase="dametrip";
     $mysqlServer="localhost";
-    
-    poslimail("team@dametrip.cz","krystof.mitka@seznam.cz","testik","dobrý den pane mitka blablablabla.");
 
     function inicializovat(){ //vyčistění databáze
         loguj("RESET DATABÁZE!!!");
@@ -19,12 +21,12 @@
                 Jmeno TEXT,
                 Vek INT,
                 Email TEXT,
-                Pohlavi TEXT,
                 BydlisteStat TEXT,
                 BydlisteMesto TEXT,
                 Cinnost TEXT,
                 DestinaceStat TEXT,
-                DestinaceMesto TEXT,);";
+                DestinaceMesto TEXT,
+                Validovano INT);";
         $ok=dotaz($dotaz);
         if($ok){
             return true;
@@ -34,10 +36,12 @@
         
     }
     
-    function pridej($Jmeno, $Vek, $Email,$Pohlavi, $BydlisteStat, $BydlisteMesto, $Cinnost, $DestinaceStat, $DestinaceMesto){ //přidá uživatele do databáze
+    function pridej($Jmeno, $Vek, $Email, $BydlisteStat, $BydlisteMesto, $Cinnost, $DestinaceStat, $DestinaceMesto){ //přidá uživatele do databáze
+        loguj("Přidávám nového uživatele do databáze....");
         $vysledek=dotaz("SELECT Id FROM lidi ORDER BY Id DESC;");
         $nextId=mysqli_fetch_array($vysledek)[0]+1;
-        $ok=dotaz("INSERT INTO lidi VALUES($nextId,'$Jmeno',$Vek,'$Email',$Pohlavi,'$BydlisteStat','$BydlisteMesto','$Cinnost','$DestinaceStat','$DestinaceMesto')");
+        $ok=dotaz("INSERT INTO lidi VALUES($nextId,'$Jmeno',$Vek,'$Email','$BydlisteStat','$BydlisteMesto','$Cinnost','$DestinaceStat','$DestinaceMesto',0)");
+        
         if($ok){
             return true;
         }else{
@@ -67,6 +71,7 @@
         loguj("Spouštím dotaz: $dotaz");
         $vysledek=mysqli_query($link, $dotaz);
         if($vysledek){
+            loguj("Dotaz se zdařil");
             return $vysledek;
         }
         else{
