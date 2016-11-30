@@ -5,10 +5,10 @@
     //validace
     //mezera ve jméně
 
-    $mysqlLogin="root";
-    $mysqlHeslo="";
-    $mysqlDatabase="dametrip";
-    $mysqlServer="localhost";
+    $mysqlLogin="a148986_2";
+    $mysqlHeslo="FmVW6LUj";
+    $mysqlDatabase="d148986_2";
+    $mysqlServer="wm133.wedos.net";
 
     function inicializovat(){ //vyčistění databáze
         loguj("RESET DATABÁZE!!!");
@@ -63,7 +63,7 @@
     }
 
     function uprav($id, $Jmeno, $Vek, $Email,$Pohlavi, $BydlisteStat, $BydlisteMesto, $Cinnost, $DestinaceStat, $DestinaceMesto, $Validovano, $Kod){
-        dotaz("UPDATE lidi SET Jmeno='$Jmeno', Vek='$Vek', Email='$Email', Pohlavi='$Pohlavi', BydlisteStat='$BydlisteStat', BydlisteMesto='$BydlisteMesto', Cinnost='$DestinaceStat', DestinaceMesto='$DestinaceMesto', Validovano=$Validovano, Kod="$Kod";");
+        dotaz("UPDATE lidi SET Jmeno='$Jmeno', Vek='$Vek', Email='$Email', Pohlavi='$Pohlavi', BydlisteStat='$BydlisteStat', BydlisteMesto='$BydlisteMesto', Cinnost='$DestinaceStat', DestinaceMesto='$DestinaceMesto', Validovano=$Validovano, Kod='$Kod';");
         
     }
 
