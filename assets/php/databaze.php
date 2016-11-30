@@ -39,6 +39,10 @@
         $vysledek=dotaz("SELECT Id FROM lidi ORDER BY Id DESC;");
         $nextId=mysqli_fetch_array($vysledek)[0]+1;
         $kod=rand();
+        $Bydliste=str_replace(" ","+",$Bydliste);
+        $Destinace=str_replace(" ","+",$Destinace);
+        $Bydliste=file_get_contents("https://maps.googleapis.com/maps/api/geocode/xml?address=$Bydliste&key=AIzaSyBCJLPKH2GQ-uGV_F6B6gvVweFO_MQrbNQ");
+        $Destinace=file_get_contents("https://maps.googleapis.com/maps/api/geocode/xml?address=$Destinace&key=AIzaSyBCJLPKH2GQ-uGV_F6B6gvVweFO_MQrbNQ");
         $ok=dotaz("INSERT INTO lidi VALUES($nextId,'$Jmeno',$Vek,'$Email','$Bydliste','$Cinnost','$Destinace',0,$kod)");
         
         if($ok){
@@ -94,7 +98,8 @@
     }
 
     function loguj($zapis){
-        echo "$zapis<br />";
+        //echo "$zapis<br />";
+        //chtělo by to zapisovat do csvčka
         $fp=fopen("log.txt","a");
         fwrite($fp, "$zapis \n");
         fclose($fp);
