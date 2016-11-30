@@ -6,7 +6,7 @@
     <body>
         <form>
             <input name="Jmeno" /> Jméno<br />
-            <input name="vek" type="number" /> Věk<br />
+            <input name="Vek" type="number" /> Věk<br />
             <input name="Email" type="email" /> Email<br />
             <input name="Bydliste" /> Bydliště<br />
             <input name="Cinnost" /> Činnost<br />
