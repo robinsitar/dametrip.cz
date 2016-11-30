@@ -20,11 +20,9 @@
                 Jmeno TEXT,
                 Vek INT,
                 Email TEXT,
-                BydlisteStat TEXT,
-                BydlisteMesto TEXT,
+                Bydliste TEXT,
                 Cinnost TEXT,
-                DestinaceStat TEXT,
-                DestinaceMesto TEXT,
+                Destinace TEXT,
                 Validovano INT,
                 Kod TEXT);";
         $ok=dotaz($dotaz);
@@ -36,12 +34,12 @@
         
     }
     
-    function pridej($Jmeno, $Vek, $Email, $BydlisteStat, $BydlisteMesto, $Cinnost, $DestinaceStat, $DestinaceMesto){ //přidá uživatele do databáze
+    function pridej($Jmeno, $Vek, $Email, $Bydliste, $Cinnost, $Destinace){ //přidá uživatele do databáze
         loguj("Přidávám nového uživatele do databáze....");
         $vysledek=dotaz("SELECT Id FROM lidi ORDER BY Id DESC;");
         $nextId=mysqli_fetch_array($vysledek)[0]+1;
-        $kod=rand(1000000,999999);
-        $ok=dotaz("INSERT INTO lidi VALUES($nextId,'$Jmeno',$Vek,'$Email','$BydlisteStat','$BydlisteMesto','$Cinnost','$DestinaceStat','$DestinaceMesto',0,$kod)");
+        $kod=rand();
+        $ok=dotaz("INSERT INTO lidi VALUES($nextId,'$Jmeno',$Vek,'$Email','$Bydliste','$Cinnost','$Destinace',0,$kod)");
         
         if($ok){
             posliMail("team@dametrip.cz",$Email,"Dámetrip.cz - Potvrzení emailové adresy","http://beta.dametrip.cz/validace.php?kod=$kod");
@@ -62,9 +60,14 @@
         }
     }
 
-    function uprav($id, $Jmeno, $Vek, $Email,$Pohlavi, $BydlisteStat, $BydlisteMesto, $Cinnost, $DestinaceStat, $DestinaceMesto, $Validovano, $Kod){
-        dotaz("UPDATE lidi SET Jmeno='$Jmeno', Vek='$Vek', Email='$Email', Pohlavi='$Pohlavi', BydlisteStat='$BydlisteStat', BydlisteMesto='$BydlisteMesto', Cinnost='$DestinaceStat', DestinaceMesto='$DestinaceMesto', Validovano=$Validovano, Kod='$Kod';");
-        
+    function uprav($id, $Jmeno, $Vek, $Email,$Pohlavi, $Bydliste, $Cinnost, $Destinace, $Validovano, $Kod){
+        if($id=="" or !$id){return false;}
+        $ok=dotaz("UPDATE lidi SET Jmeno='$Jmeno', Vek='$Vek', Email='$Email', Pohlavi='$Pohlavi', Bydliste='$Bydliste', Cinnost='$Cinnost', Destinace='$Destinace', Validovano=$Validovano, Kod='$Kod';");
+        if($ok){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     function dotaz($dotaz){
