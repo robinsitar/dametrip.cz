@@ -93,7 +93,7 @@
 
 })(jQuery);
         var indicator = true;
-        $(".formularInput").on('input propertychange', function() {
+        $(".formularInput").on('input propertychange focus', function() {
             kontrolOtazka();
         }) 
        
@@ -144,13 +144,15 @@
         }
         kontrolOtazka();
         
+        //PREDESLA OTAZKA
         activator = true;
         function prevOtazka() {
           if(activator == true) {
            if($(".formularOtazkaWrapper.active").hasClass("posledni")){
                 $(".formularDalsiText").text("Další Otázka");
-                $(".formularKonecnaSipka").hide();
+                $(".formularKonecnaSipka").hide(); //Prepinani z konečného submitu
                 $(".formularDalsiSipka").show();
+                $(".formularDalsiWrapper").off("click").on("click", function() { nextOtazka() }) //Vypnutí submitu
             }      
         
            activator = false;      
@@ -181,6 +183,7 @@
           }
         }
         
+        //DALSI OTAZKA
         function nextOtazka() {
          if($(".formularInput.active").val() !== "" && activator == true) {
              
@@ -198,8 +201,9 @@
              if($(".formularOtazkaWrapper.active").hasClass("predposledni")){
                 
                 $(".formularDalsiText").text("Odeslat");
-                $(".formularDalsiSipka").hide();
-                $(".formularKonecnaSipka").show(); 
+                $(".formularDalsiSipka").hide(); // Přepínaní na konečnej submit
+                $(".formularKonecnaSipka").show();
+                $(".formularDalsiWrapper").off("click").on("click", function() {document.forms[0].submit()}) //Zapnutí submitu
                 
             }
             
