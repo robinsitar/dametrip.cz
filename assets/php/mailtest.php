@@ -1,6 +1,6 @@
 <html>
     <?php
-        include "assets/php/databaze.php";
+        include "databaze.php";
         $random=rand();
     ?>
     <body>
