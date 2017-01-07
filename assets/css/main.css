@@ -1701,7 +1701,7 @@
 		input[type="email"]:focus,
 		select:focus,
 		textarea:focus {
-			box-shadow: 0 0 0 2px #21b2a6;
+			box-shadow: 0 0 0 2px #c75546;
 		}
 
 	.select-wrapper {
@@ -2644,7 +2644,7 @@
 		.wrapper.style1 {
 			background-color: #ed4933;
 			color: #c7ebe8;
-            height: 100vh;
+            min-height: 100vh;
 		}
 
 			.wrapper.style1 strong, .wrapper.style1 b {
@@ -3823,13 +3823,18 @@ html, body {
     font-size: 40px;
     padding-top: 50px;
 }
+@media screen and (max-width:376px) {
+  .formularHeading {
+    padding-top: 20px;
+}
+}
 .formularInner {
     background-color: rgba(105, 105, 105, 0.9);
     height: 550px;
     position: relative;
 }
 .formularOtazka {
-    padding-top: 150px;
+    padding-top: 145px;
 }
 .formularText {
     font-size: 25px;

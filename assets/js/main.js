@@ -125,6 +125,7 @@
             if(indicator == true) {
                $(".formularImg.active").attr('src', 'images/animace.gif');
                indicator = false;
+               $("input:focus").css("box-shadow","0 0 0 2px #04a204");
               
             setTimeout(function() {
                 if($(".formularInput.active").val() !== "" ) {
@@ -136,6 +137,7 @@
             
          else if($(".formularInput.active").val() == "") {
                 $(".formularImg.active").attr('src', 'images/cross.png');
+                $("input:focus").css("box-shadow","0 0 0 2px #c75546");
                 indicator = true;
             }
             
