@@ -3,7 +3,7 @@
     //udělat nějakou zabezpečovací funkci, kterou se budou prohánět všechny user inputy.
     //automatchování
     //validace
-    //mezera ve jméně
+        //mezera ve jméně
 
     $mysqlLogin="a148986_2";
     $mysqlHeslo="FmVW6LUj";
