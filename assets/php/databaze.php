@@ -2,8 +2,14 @@
     //TODO:
     //udělat nějakou zabezpečovací funkci, kterou se budou prohánět všechny user inputy.
     //automatchování
-    //validace
-        //mezera ve jméně
+    //cachovanou apíčkovou funkci - oboustranně
+    //uživatel musí mít
+        //mezeru ve jméně
+        //zavináč a tečku v mailu
+        //věk mezi 1 - 120
+        //validované město původu
+        //validní destinaci
+        //do budoucna jednu z povolených aktivit
 
     $mysqlLogin="a148986_2";
     $mysqlHeslo="FmVW6LUj";
@@ -13,7 +19,7 @@
 
     function inicializovat(){ //vyčistění databáze
         loguj("RESET DATABÁZE!!!");
-        //tabulka
+        //tabulka uživatelů
         $dotaz="DROP TABLE lidi;";
         dotaz($dotaz);
         $dotaz="CREATE TABLE lidi(
@@ -26,8 +32,16 @@
                 Destinace TEXT,
                 Validovano INT,
                 Kod TEXT);";
-        $ok=dotaz($dotaz);
-        if($ok){
+        $ok1=dotaz($dotaz);
+        
+        $dotaz="DROP TABLE geocodes;";
+        dotaz($dotaz);
+        $dotaz="CREATE TABLE geocodes(
+                Nazev TEXT,
+                Vysledek TEXT,
+                Timestamp INT);";
+        $ok2=dotaz($dotaz);
+        if($ok1 && $ok2){
             return true;
         }else{
             return false;
@@ -57,7 +71,7 @@
 
     function smaz($id){
         if($id=="" or !$id){return false;}
-        $ok=dotaz("DELETE FROM lidi WHERE Id=$id;");    
+        $ok=dotaz("DELETE FROM lidi WHERE Id='$id';");    
         if($ok){
             return true;
         }else{
@@ -67,7 +81,7 @@
 
     function uprav($id, $Jmeno, $Vek, $Email,$Pohlavi, $Bydliste, $Cinnost, $Destinace, $Validovano, $Kod){
         if($id=="" or !$id){return false;}
-        $ok=dotaz("UPDATE lidi SET Jmeno='$Jmeno', Vek='$Vek', Email='$Email', Pohlavi='$Pohlavi', Bydliste='$Bydliste', Cinnost='$Cinnost', Destinace='$Destinace', Validovano=$Validovano, Kod='$Kod';");
+        $ok=dotaz("UPDATE lidi SET Jmeno='$Jmeno', Vek='$Vek', Email='$Email', Pohlavi='$Pohlavi', Bydliste='$Bydliste', Cinnost='$Cinnost', Destinace='$Destinace', Validovano=$Validovano, Kod='$Kod' WHERE Id='$id';");
         if($ok){
             return true;
         }else{
@@ -100,11 +114,35 @@
         return $link;
     }
 
-    function geocode($vstup){
+    function geocode($nazev){
         global $apiKey;
-        loguj("Geocoduju $vstup");
-        $vstup=str_replace(" ","+",$vstup);
-        $soubor="https://maps.googleapis.com/maps/api/geocode/xml?address=$vstup&key=$apiKey";
+        $maxAge=2629743; //jednou za měsíc obnovit
+        
+        loguj("Geocoduju $nazev");
+        $nazev=str_replace(" ","+",$nazev); //snad tam nebudou dvojité mezery... ty by to neměly rozbít, ale stejně...
+        loguj("hledam v $nazev v cache tabulce");
+        $ok=dotaz("SELECT Vysledek, Timestamp FROM geocodes WHERE Nazev='$nazev';");
+        $timestamp=microtime();
+        if(mysqli_num_rows($ok)<1){//nic to nenašlo, jdeme googlovat
+            loguj("Nic jsem nenašel");
+            $vystup_simplexml=simplexml_load_file("https://maps.googleapis.com/maps/api/geocode/xml?address=$nazev&key=$apiKey");
+            $vystup=$vystup_simplexml->asXML();
+            dotaz("INSERT INTO geocodes VALUES ('$nazev','$timestamp','$vystup');");
+        }else{
+            loguj("Našel jsem. zjišťuji stáří...");
+            $vysledky=mysqli_fetch_array($ok);
+            if(microtime()-$vysledky[2]<$maxAge){
+                loguj("stáří v pořádku");
+                $vysledek=$vysledky[1];
+            }
+            else{
+                loguj("záznam je příliš starý. rekurzivně aktualizuji");
+                dotaz("DELETE FROM geocodes WHERE Nazev='$nazev'");
+                $vysledek=geocode($nazev);
+                loguj("rekurze úspěšně ukončena");
+            }
+        }
+        //echo "$vystup<br />";
         /*echo "$soubor <br />";
         $fp=fopen($soubor,"r");
         //$vystup=fread($fp,filesize($soubor));
@@ -113,15 +151,30 @@
             $vystup+=fgets($fp);
         }
         loguj("vysledkem je $vystup");*/
-        $vystup=simplexml_load_file($soubor);
+        loguj("vystupem geokódování je: $vystup");
         return $vystup;
+    }
+
+    function distance($lat1,$lon1,$lat2,$lon2){
+        
+        $R=6378;
+        $dLat=deg2rad($lat1-$lat2);
+        $dLon=deg2rad($lon1-$lon2);
+        $lat1=deg2rad($lat1);
+        $lat2=deg2rad($lat2);
+        
+        $a=sin($dLat/2)*sin($dLat/2)+sin($dLon/2)*sin($dLon/2)*cos($lat1)*cos($lat2);
+        $c=2*atan2(sqrt(a),sqrt(1-a));
+        
+        return $R*$c;
     }
 
     function loguj($zapis){
         //echo "$zapis<br />";
         //chtělo by to zapisovat do csvčka
-        $fp=fopen("log.txt","a");
-        fwrite($fp, "$zapis \n");
+        $timestamp=microtime(true);
+        $fp=fopen("log.html","a");
+        fwrite($fp, "$timestamp: $zapis </br>");
         fclose($fp);
     }
 
@@ -148,15 +201,5 @@
         // Send the mail
         $mail = $smtp->send($to, $headers, $body);
     }
-
-    function easymail($odesilatel, $prijemce, $predmet, $obsah){
-        if(mail($prijemce, $predmet, $obsah, $odesilatel)){
-            loguj("odeslán email na adresu $prijemce od $odesilatel s předmětem $predmet a textem $obsah");
-        }
-        else{
-            loguj("ERROR - nepodařilo se odeslat mail na adresu $prijemce od $odesilatel s předmětem $predmet a textem $obsah");
-        }
-    }
-
 
 ?>
