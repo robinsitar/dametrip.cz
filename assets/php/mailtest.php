@@ -1,7 +1,6 @@
 <html>
     <?php
         include "databaze.php";
-        $random=rand();
     ?>
     <body>
         <form method="post">

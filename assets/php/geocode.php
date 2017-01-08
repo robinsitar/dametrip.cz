@@ -1,7 +1,6 @@
 <html>
     <?php
         include "databaze.php";
-        $random=rand();
     ?>
     <body>
         <form method="post">
@@ -10,7 +9,9 @@
         </form>
        <?php
             if(isset($_POST["Vyraz"])){
-                $vysledek=geocode($_POST["Vyraz"]);
+                $vystup=geocode($_POST["Vyraz"]);
+                print_r($vystup);
+                $vysledek=simplexml_load_string($vystup);
                 echo "lat: ";
                 echo $lat=$vysledek->result->geometry->location->lat;
                 echo "<br />lon: ";
