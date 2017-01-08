@@ -149,5 +149,14 @@
         $mail = $smtp->send($to, $headers, $body);
     }
 
+    function easymail($odesilatel, $prijemce, $predmet, $obsah){
+        if(mail($prijemce, $predmet, $obsah, $odesilatel)){
+            loguj("odeslán email na adresu $prijemce od $odesilatel s předmětem $predmet a textem $obsah");
+        }
+        else{
+            loguj("ERROR - nepodařilo se odeslat mail na adresu $prijemce od $odesilatel s předmětem $predmet a textem $obsah");
+        }
+    }
+
 
 ?>
