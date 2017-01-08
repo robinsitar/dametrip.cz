@@ -53,11 +53,9 @@
         loguj("Přidávám nového uživatele do databáze....");
         $vysledek=dotaz("SELECT Id FROM lidi ORDER BY Id DESC;");
         $nextId=mysqli_fetch_array($vysledek)[0]+1;
-        $kod=rand();
-        $Bydliste=str_replace(" ","+",$Bydliste);
-        $Destinace=str_replace(" ","+",$Destinace);
-        $Bydliste=file_get_contents("https://maps.googleapis.com/maps/api/geocode/xml?address=$Bydliste&key=AIzaSyBCJLPKH2GQ-uGV_F6B6gvVweFO_MQrbNQ");
-        $Destinace=file_get_contents("https://maps.googleapis.com/maps/api/geocode/xml?address=$Destinace&key=AIzaSyBCJLPKH2GQ-uGV_F6B6gvVweFO_MQrbNQ");
+        $kod=rand(11111111,99999999);
+        $Bydliste=geocode($Bydliste);
+        $Destinace=geocode($Destinace);
         $ok=dotaz("INSERT INTO lidi VALUES($nextId,'$Jmeno',$Vek,'$Email','$Bydliste','$Cinnost','$Destinace',0,$kod)");
         
         if($ok){
@@ -81,6 +79,8 @@
 
     function uprav($id, $Jmeno, $Vek, $Email,$Pohlavi, $Bydliste, $Cinnost, $Destinace, $Validovano, $Kod){
         if($id=="" or !$id){return false;}
+        $Bydliste=geocode($Bydliste);
+        $Destinace=geocode($Destinace);
         $ok=dotaz("UPDATE lidi SET Jmeno='$Jmeno', Vek='$Vek', Email='$Email', Pohlavi='$Pohlavi', Bydliste='$Bydliste', Cinnost='$Cinnost', Destinace='$Destinace', Validovano=$Validovano, Kod='$Kod' WHERE Id='$id';");
         if($ok){
             return true;
