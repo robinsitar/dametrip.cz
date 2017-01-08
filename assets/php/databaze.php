@@ -122,25 +122,26 @@
         $nazev=str_replace(" ","+",$nazev); //snad tam nebudou dvojité mezery... ty by to neměly rozbít, ale stejně...
         loguj("hledam v $nazev v cache tabulce");
         $ok=dotaz("SELECT Vysledek, Timestamp FROM geocodes WHERE Nazev='$nazev';");
-        $timestamp=microtime();
+        $timestamp=time();
         if(mysqli_num_rows($ok)<1){//nic to nenašlo, jdeme googlovat
             loguj("Nic jsem nenašel");
-            $vystup_simplexml=simplexml_load_file("https://maps.googleapis.com/maps/api/geocode/xml?address=$nazev&key=$apiKey");
-            $vystup=$vystup_simplexml->asXML();
-            dotaz("INSERT INTO geocodes VALUES ('$nazev','$timestamp','$vystup');");
+            $vystup=file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?address=$nazev&key=$apiKey");
+            //echo $vystup;
+            dotaz("INSERT INTO geocodes VALUES ('$nazev','$vystup','$timestamp');");
         }else{
             loguj("Našel jsem. zjišťuji stáří...");
             $vysledky=mysqli_fetch_array($ok);
-            if(microtime()-$vysledky[2]<$maxAge){
-                loguj("stáří v pořádku");
-                $vysledek=$vysledky[1];
-            }
+            $stari=time()-$vysledky[2];
+            //if($stari<$maxAge){
+                loguj("stáří $stari je v pořádku");
+                $vystup=$vysledky[0];
+            /*}
             else{
-                loguj("záznam je příliš starý. rekurzivně aktualizuji");
+                loguj("záznam je příliš starý - $stari, rekurzivně aktualizuji");
                 dotaz("DELETE FROM geocodes WHERE Nazev='$nazev'");
                 $vysledek=geocode($nazev);
                 loguj("rekurze úspěšně ukončena");
-            }
+            }*/
         }
         //echo "$vystup<br />";
         /*echo "$soubor <br />";
@@ -172,7 +173,7 @@
     function loguj($zapis){
         //echo "$zapis<br />";
         //chtělo by to zapisovat do csvčka
-        $timestamp=microtime(true);
+        $timestamp=microtime();
         $fp=fopen("log.html","a");
         fwrite($fp, "$timestamp: $zapis </br>");
         fclose($fp);
