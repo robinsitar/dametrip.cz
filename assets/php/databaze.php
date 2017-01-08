@@ -9,6 +9,7 @@
     $mysqlHeslo="FmVW6LUj";
     $mysqlDatabase="d148986_2";
     $mysqlServer="wm133.wedos.net";
+    $apiKey="AIzaSyBCJLPKH2GQ-uGV_F6B6gvVweFO_MQrbNQ";
 
     function inicializovat(){ //vyčistění databáze
         loguj("RESET DATABÁZE!!!");
@@ -76,6 +77,7 @@
 
     function dotaz($dotaz){
         global $link;
+        
         if(!$link){prihlasit();}
         loguj("Spouštím dotaz: $dotaz");
         $vysledek=mysqli_query($link, $dotaz);
@@ -92,9 +94,27 @@
 
     function prihlasit(){
         global $mysqlLogin, $mysqlHeslo, $mysqlServer, $mysqlDatabase, $link;
+        
         $link=mysqli_connect($mysqlServer,$mysqlLogin, $mysqlHeslo);
         $ok=mysqli_select_db($link, $mysqlDatabase);
         return $link;
+    }
+
+    function geocode($vstup){
+        global $apiKey;
+        loguj("Geocoduju $vstup");
+        $vstup=str_replace(" ","+",$vstup);
+        $soubor="https://maps.googleapis.com/maps/api/geocode/xml?address=$vstup&key=$apiKey";
+        /*echo "$soubor <br />";
+        $fp=fopen($soubor,"r");
+        //$vystup=fread($fp,filesize($soubor));
+        $vystup="";
+        while(!feof($fp)){
+            $vystup+=fgets($fp);
+        }
+        loguj("vysledkem je $vystup");*/
+        $vystup=simplexml_load_file($soubor);
+        return $vystup;
     }
 
     function loguj($zapis){
@@ -105,8 +125,7 @@
         fclose($fp);
     }
 
-    function poslimail($komu, $predmet, $zprava )
-    {
+    function poslimail($komu, $predmet, $zprava ){
         $from = '<team@dametrip.cz>'; //change this to your email address
         $to = $komu; // change to address
         $subject = $predmet; // subject of mail
