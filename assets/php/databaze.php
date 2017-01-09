@@ -159,13 +159,6 @@
     }
 
     function vzdalenost($lat1,$lon1,$lat2,$lon2){
-        
-        loguj("vzdalenost");
-        loguj($lat1);
-        loguj($lon1);
-        loguj($lat2);
-        loguj($lon2);
-        loguj("/vzdalenost");
         $R=6378;
         $dLat=deg2rad($lat1-$lat2);
         $dLon=deg2rad($lon1-$lon2);
@@ -191,9 +184,9 @@
         $min=100000000000000;//nahradit něčím jako float.max v C#
         for($x=0; $x<$kandidatu; $x++){
             $kandidati[$x]=mysqli_fetch_array($vysledek);
-            loguj($kandidati[$x][0]->geometry->location);
+            echo "lat: ".$kandidati[$x][0]->results[0]->geometry->location->lat;
             $kandidati[$x][5]=vzdalenost($kandidati[$x][0]->results[0]->geometry->location->lat,$kandidati[$x][0]->results[0]->geometry->location->lon,$ja[0]->results[0]->geometry->location->lat,$ja[0]->results[0]->geometry->location->lng); //vzájemná vzdálesnost destinací
-            $kandidati[$x][6]=vzdalenost($kandidati[$x][1]->results[0]->geometry->location->lat,$kandidati[$x][1]->results[0]->geometry->location->lon,$mojeLat,$ja[1]->results[0]->geometry->location->lat,$ja[1]->results[0]->geometry->location->lng); //vzájemná vzdálesnost bydlišť
+            $kandidati[$x][6]=vzdalenost($kandidati[$x][1]->results[0]->geometry->location->lat,$kandidati[$x][1]->results[0]->geometry->location->lon,$ja[1]->results[0]->geometry->location->lat,$ja[1]->results[0]->geometry->location->lng); //vzájemná vzdálesnost bydlišť
             if($kandidati[$x][2]==$ja[2]){$kandidati[$x][7]=1;}else{$kandidati[$x][7]=0;} //shodují se aktivity?
             $kandidati[$x][8]=abs($kandidati[$x][3]-$ja[3]); //rozdíl věku
             if($kandidati[$x][5]+$kandidati[$x][6]<$min){$min=$kandidati[$x][5]+$kandidati[$x][6]; $match=$kandidati[$x];}
@@ -223,7 +216,7 @@
     }
 
     function poslimail($komu, $predmet, $zprava ){
-        echo "<p style='background-color: red; color: white;padding: 5px;'>Milý majiteli emailu $komu. V této kritické chvíli vám měl přijít email s předmětem '$predmet', který by vám pověděl následující: '$zprava'. To, že nepřišel, je nám srdečné líto, již pracujeme na tom, aby se věci obrátily k normálnímu chodu. Omlouváme se za způsobené komplikace<br />Hezký zbytek dne přeje Martin z Dámetripu</p>";
+        echo "<p style='background-color: red; color: white;padding: 5px;'>Milý majiteli emailu $komu. v této kritické chvíli vám měl přijít email s předmětem '$predmet', který by vám pověděl následující: '$zprava'. To, že vám nepřišel, je nám srdečné líto. Až se boj se zaměstnaneckou disciplínou opět dostane pod kontrolu, budete od nás emaily dostávat zase tak, jak by měli. Martin z Dámetripu</p>";
         /*$from = '<team@dametrip.cz>'; //change this to your email address
         $to = $komu; // change to address
         $subject = $predmet; // subject of mail
