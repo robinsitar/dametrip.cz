@@ -159,6 +159,8 @@
     }
 
     function vzdalenost($lat1,$lon1,$lat2,$lon2){
+        
+        loguj("počítám vzdálenost mezi $lat1, $lon1 a $lat2,$lon2");
         $R=6378;
         $dLat=deg2rad($lat1-$lat2);
         $dLon=deg2rad($lon1-$lon2);
@@ -168,7 +170,8 @@
         $a=sin($dLat/2)*sin($dLat/2)+sin($dLon/2)*sin($dLon/2)*cos($lat1)*cos($lat2);
         $c=2*atan2(sqrt(a),sqrt(1-a));
         
-        return $R*$c;
+        return rand(1,100);
+        //return $R*$c;
     }
 
     function matchni($id){ //zatím na základě vzdáleností destinací a bydlišť bez vah
@@ -184,9 +187,9 @@
         $min=100000000000000;//nahradit něčím jako float.max v C#
         for($x=0; $x<$kandidatu; $x++){
             $kandidati[$x]=mysqli_fetch_array($vysledek);
-            echo "lat: ".$kandidati[$x][0]->results[0]->geometry->location->lat;
-            $kandidati[$x][5]=vzdalenost($kandidati[$x][0]->results[0]->geometry->location->lat,$kandidati[$x][0]->results[0]->geometry->location->lon,$ja[0]->results[0]->geometry->location->lat,$ja[0]->results[0]->geometry->location->lng); //vzájemná vzdálesnost destinací
-            $kandidati[$x][6]=vzdalenost($kandidati[$x][1]->results[0]->geometry->location->lat,$kandidati[$x][1]->results[0]->geometry->location->lon,$ja[1]->results[0]->geometry->location->lat,$ja[1]->results[0]->geometry->location->lng); //vzájemná vzdálesnost bydlišť
+            echo json_decode($kandidati[$x][0])->results[0]->geometry->location->lat;
+            $kandidati[$x][5]=vzdalenost(json_decode($kandidati[$x][0])->results[0]->geometry->location->lat,json_decode($kandidati[$x][0])->results[0]->geometry->location->lon,json_decode($ja[0])->results[0]->geometry->location->lat,json_decode($ja[0])->results[0]->geometry->location->lng); //vzájemná  vzdálesnost destinací
+            $kandidati[$x][6]=vzdalenost(json_decode($kandidati[$x][1])->results[0]->geometry->location->lat,json_decode($kandidati[$x][1])->results[0]->geometry->location->lon,json_decode($ja[1])->results[0]->geometry->location->lat,json_decode($ja[1])->results[0]->geometry->location->lng); //vzájemná vzdálesnost bydlišť
             if($kandidati[$x][2]==$ja[2]){$kandidati[$x][7]=1;}else{$kandidati[$x][7]=0;} //shodují se aktivity?
             $kandidati[$x][8]=abs($kandidati[$x][3]-$ja[3]); //rozdíl věku
             if($kandidati[$x][5]+$kandidati[$x][6]<$min){$min=$kandidati[$x][5]+$kandidati[$x][6]; $match=$kandidati[$x];}
