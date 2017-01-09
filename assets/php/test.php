@@ -2,6 +2,15 @@
     <?php
         include "databaze.php";
     ?>
+    <style>
+        form{
+            padding: 10px;
+            margin: 5px;
+            background-color: black;
+            color: white;
+            font-family: monospace;
+        }
+    </style>
     <body>
         <form method="post">
             <h1>Přidat uživatele</h1>
@@ -46,7 +55,7 @@
             }
             
                 //výpis z tabulky lidí                                                                             
-                $vysledek=dotaz("SELECT * FROM $tabulka;");
+                $vysledek=dotaz("SELECT * FROM lidi;");
                 $radku=mysqli_num_rows($vysledek);
                 $sloupcu=mysqli_num_fields($vysledek);
                 echo "<table border='solid'>";
