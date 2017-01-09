@@ -31,7 +31,8 @@
                 Cinnost TEXT,
                 Destinace TEXT,
                 Validovano INT,
-                Kod TEXT);";
+                Kod TEXT,
+                Timestamp INT);";
         $ok1=dotaz($dotaz);
         
         $dotaz="DROP TABLE geocodes;";
@@ -55,7 +56,8 @@
         $kod=rand(11111111,99999999);
         $Bydliste=geocode($Bydliste);
         $Destinace=geocode($Destinace);
-        $ok=dotaz("INSERT INTO lidi VALUES($nextId,'$Jmeno',$Vek,'$Email','$Bydliste','$Cinnost','$Destinace',0,$kod)");
+        $timestamp=time();
+        $ok=dotaz("INSERT INTO lidi VALUES($nextId,'$Jmeno',$Vek,'$Email','$Bydliste','$Cinnost','$Destinace',0,$kod,$timestamp)");
         
         if($ok){
             posliMail("team@dametrip.cz",$Email,"Dámetrip.cz - Potvrzení emailové adresy","http://beta.dametrip.cz/validace.php?kod=$kod");
@@ -80,7 +82,8 @@
         if($id=="" or !$id){return false;}
         $Bydliste=geocode($Bydliste);
         $Destinace=geocode($Destinace);
-        $ok=dotaz("UPDATE lidi SET Jmeno='$Jmeno', Vek='$Vek', Email='$Email', Pohlavi='$Pohlavi', Bydliste='$Bydliste', Cinnost='$Cinnost', Destinace='$Destinace', Validovano=$Validovano, Kod='$Kod' WHERE Id='$id';");
+        $timestamp=microtime();
+        $ok=dotaz("UPDATE lidi SET Jmeno='$Jmeno', Vek='$Vek', Email='$Email', Pohlavi='$Pohlavi', Bydliste='$Bydliste', Cinnost='$Cinnost', Destinace='$Destinace', Validovano=$Validovano, Kod='$Kod', Timestamp="$timestamp" WHERE Id='$id';");
         if($ok){
             return true;
         }else{
@@ -155,7 +158,7 @@
         return $vystup;
     }
 
-    function distance($lat1,$lon1,$lat2,$lon2){
+    function vzdalenost($lat1,$lon1,$lat2,$lon2){
         
         $R=6378;
         $dLat=deg2rad($lat1-$lat2);
@@ -169,10 +172,26 @@
         return $R*$c;
     }
 
-    function matchni($id){
-        $kdo=mysqli_fetch_array(dotaz("SELECT Destinace, Bydliste, Cinnost, Vek WHERE Id=$id;"));
+    function matchni($id){ //zatím na základě vzdáleností destinací a bydlišť bez vah
+        $iDestinace=1;
+        $iBydliste=1;
+        $iCinnost=1; //zatím moc nefunguje
+        $iVek=1;
+        
+        
+        $ja=mysqli_fetch_array(dotaz("SELECT Destinace, Bydliste, Cinnost, Vek WHERE Id=$id;"));
         $vysledek=dotaz("SELECT Destinace, Bydliste, Cinnost, Vek WHERE Id!=$id;");
-        $kandidatu=mysqli_fet
+        $kandidatu=mysqli_num_rows($vysledek);
+        $min=100000000000000;//nahradit něčím jako float.max v C#
+        for($x=0; $x<$kandidatu; $x++){
+            $kandidati[$x]=mysqli_fetch_array($vysledek);
+            $kandidati[$x][4]=vzdalenost($kandidati[$x][0]->geometry->location->lat,$kandidati[$x][0]->geometry->location->lon,$mojeLat,$ja[0]->geometry->location->lat,$ja[0]->geometry->location->lng); //vzájemná vzdálesnost destinací
+            $kandidati[$x][5]=vzdalenost($kandidati[$x][1]->geometry->location->lat,$kandidati[$x][1]->geometry->location->lon,$mojeLat,$ja[1]->geometry->location->lat,$ja[1]->geometry->location->lng); //vzájemná vzdálesnost bydlišť
+            if($kandidati[$x][2]==$ja[2]){$kandidati[$x][6]=1;}else{$kandidati[$x][6]=0;}
+            $kandidati[$x][7]=abs($kandidati[$x][3]-$ja[3]);
+            if($kandidati[$x][4]+$kandidati[$x][5]<$min){$min=$kandidati[$x][4]+$kandidati[$x][5]; $match=$kandidati[$x];}
+        }
+        
         return $match;    
     }
 
