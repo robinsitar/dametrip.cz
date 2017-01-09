@@ -82,7 +82,7 @@
         if($id=="" or !$id){return false;}
         $Bydliste=geocode($Bydliste);
         $Destinace=geocode($Destinace);
-        $timestamp=microtime();
+        $timestamp=time();
         $ok=dotaz("UPDATE lidi SET Jmeno='$Jmeno', Vek='$Vek', Email='$Email', Pohlavi='$Pohlavi', Bydliste='$Bydliste', Cinnost='$Cinnost', Destinace='$Destinace', Validovano=$Validovano, Kod='$Kod', Timestamp='$timestamp' WHERE Id='$id';");
         if($ok){
             return true;
@@ -209,7 +209,7 @@
     function loguj($zapis){
         //echo "$zapis<br />";
         //chtělo by to zapisovat do csvčka
-        $timestamp=microtime();
+        $timestamp=time();
         $fp=fopen("log.html","a");
         fwrite($fp, "$timestamp: $zapis </br>");
         fclose($fp);
