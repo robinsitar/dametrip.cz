@@ -51,8 +51,7 @@
     
     function pridej($Jmeno, $Vek, $Email, $Bydliste, $Cinnost, $Destinace){ //přidá uživatele do databáze
         loguj("Přidávám nového uživatele do databáze....");
-        $vysledek=dotaz("SELECT Id FROM lidi ORDER BY Id DESC;");
-        $nextId=mysqli_fetch_array($vysledek)[0]+1;
+        $nextId=rand(0,999999999);
         $kod=rand(11111111,99999999);
         $Bydliste=geocode($Bydliste);
         $Destinace=geocode($Destinace);
@@ -168,6 +167,13 @@
         $c=2*atan2(sqrt(a),sqrt(1-a));
         
         return $R*$c;
+    }
+
+    function matchni($id){
+        $kdo=mysqli_fetch_array(dotaz("SELECT Destinace, Bydliste, Cinnost, Vek WHERE Id=$id;"));
+        $vysledek=dotaz("SELECT Destinace, Bydliste, Cinnost, Vek WHERE Id!=$id;");
+        $kandidatu=mysqli_fet
+        return $match;    
     }
 
     function loguj($zapis){
