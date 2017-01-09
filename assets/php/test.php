@@ -6,11 +6,11 @@
         <form method="post">
             <h1>Přidat uživatele</h1>
             <input name="Jmeno" /> Jméno<br />
-            <input name="Vek" /> Jméno<br />
-            <input name="Email" /> Jméno<br />
-            <input name="Bydliste" /> Jméno<br />
-            <input name="Cinnost" /> Jméno<br />
-            <input name="Destinace" /> Jméno<br />
+            <input name="Vek" /> Věk<br />
+            <input name="Email" /> Email<br />
+            <input name="Bydliste" /> Bydliště<br />
+            <input name="Cinnost" /> Činnost<br />
+            <input name="Destinace" /> Destinace<br />
             
             <input type="submit" value="Přidat" name="cudlik" />
         </form>
@@ -37,7 +37,7 @@
             ?>
         </form>
        <?php
-            if(isset($_POST["Jmeno"]) && isset($_POST["Vek"]&& isset($_POST["Email"]&& isset($_POST["Bydliste"]&& isset($_POST["Cinnost"]&& isset($_POST["Destinace"])){
+            if(isset($_POST["Jmeno"]) && isset($_POST["Vek"])&& isset($_POST["Email"])&& isset($_POST["Bydliste"])&& isset($_POST["Cinnost"])&& isset($_POST["Destinace"])){
                 if(pridej($_POST["Jmeno"], $_POST["Vek"], $_POST["Email"], $_POST["Bydliste"], $_POST["Cinnost"], $_POST["Destinace"])){
                     echo "OK - uživatel přidán";
                 }else{

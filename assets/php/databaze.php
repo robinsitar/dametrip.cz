@@ -83,7 +83,7 @@
         $Bydliste=geocode($Bydliste);
         $Destinace=geocode($Destinace);
         $timestamp=microtime();
-        $ok=dotaz("UPDATE lidi SET Jmeno='$Jmeno', Vek='$Vek', Email='$Email', Pohlavi='$Pohlavi', Bydliste='$Bydliste', Cinnost='$Cinnost', Destinace='$Destinace', Validovano=$Validovano, Kod='$Kod', Timestamp="$timestamp" WHERE Id='$id';");
+        $ok=dotaz("UPDATE lidi SET Jmeno='$Jmeno', Vek='$Vek', Email='$Email', Pohlavi='$Pohlavi', Bydliste='$Bydliste', Cinnost='$Cinnost', Destinace='$Destinace', Validovano=$Validovano, Kod='$Kod', Timestamp='$timestamp' WHERE Id='$id';");
         if($ok){
             return true;
         }else{
