@@ -179,20 +179,31 @@
         $iVek=1;
         
         
-        $ja=mysqli_fetch_array(dotaz("SELECT Destinace, Bydliste, Cinnost, Vek WHERE Id=$id;"));
-        $vysledek=dotaz("SELECT Destinace, Bydliste, Cinnost, Vek WHERE Id!=$id;");
+        $ja=mysqli_fetch_array(dotaz("SELECT Destinace, Bydliste, Cinnost, Vek, Id WHERE Id=$id;"));
+        $vysledek=dotaz("SELECT Destinace, Bydliste, Cinnost, Vek, Id WHERE Id!=$id and Validovano=1;");
         $kandidatu=mysqli_num_rows($vysledek);
         $min=100000000000000;//nahradit něčím jako float.max v C#
         for($x=0; $x<$kandidatu; $x++){
             $kandidati[$x]=mysqli_fetch_array($vysledek);
-            $kandidati[$x][4]=vzdalenost($kandidati[$x][0]->geometry->location->lat,$kandidati[$x][0]->geometry->location->lon,$mojeLat,$ja[0]->geometry->location->lat,$ja[0]->geometry->location->lng); //vzájemná vzdálesnost destinací
-            $kandidati[$x][5]=vzdalenost($kandidati[$x][1]->geometry->location->lat,$kandidati[$x][1]->geometry->location->lon,$mojeLat,$ja[1]->geometry->location->lat,$ja[1]->geometry->location->lng); //vzájemná vzdálesnost bydlišť
-            if($kandidati[$x][2]==$ja[2]){$kandidati[$x][6]=1;}else{$kandidati[$x][6]=0;}
-            $kandidati[$x][7]=abs($kandidati[$x][3]-$ja[3]);
-            if($kandidati[$x][4]+$kandidati[$x][5]<$min){$min=$kandidati[$x][4]+$kandidati[$x][5]; $match=$kandidati[$x];}
+            $kandidati[$x][5]=vzdalenost($kandidati[$x][0]->geometry->location->lat,$kandidati[$x][0]->geometry->location->lon,$mojeLat,$ja[0]->geometry->location->lat,$ja[0]->geometry->location->lng); //vzájemná vzdálesnost destinací
+            $kandidati[$x][6]=vzdalenost($kandidati[$x][1]->geometry->location->lat,$kandidati[$x][1]->geometry->location->lon,$mojeLat,$ja[1]->geometry->location->lat,$ja[1]->geometry->location->lng); //vzájemná vzdálesnost bydlišť
+            if($kandidati[$x][2]==$ja[2]){$kandidati[$x][7]=1;}else{$kandidati[$x][7]=0;} //shodují se aktivity?
+            $kandidati[$x][8]=abs($kandidati[$x][3]-$ja[3]); //rozdíl věku
+            if($kandidati[$x][5]+$kandidati[$x][6]<$min){$min=$kandidati[$x][5]+$kandidati[$x][6]; $match=$kandidati[$x];}
         }
         
-        return $match;    
+        return $match;
+        /*
+        $match[0]...destinace
+        $match[1]...bydliště
+        $match[2]...činnost
+        $match[3]...věk
+        $match[4]...Id
+        $match[5]...vzájemná vzdálenost destinací
+        $match[6]...vzájemná vzdálenost bydlišť
+        $match[7]...stejná aktivita? 1/0
+        $match[8]...rozdíl věku
+        */
     }
 
     function loguj($zapis){
