@@ -60,7 +60,7 @@
         $ok=dotaz("INSERT INTO lidi VALUES($nextId,'$Jmeno',$Vek,'$Email','$Bydliste','$Cinnost','$Destinace',0,$kod,$timestamp)");
         
         if($ok){
-            posliMail("team@dametrip.cz",$Email,"Dámetrip.cz - Potvrzení emailové adresy","http://beta.dametrip.cz/validace.php?kod=$kod");
+            posliMail($Email,"Dámetrip.cz - Potvrzení emailové adresy","http://beta.dametrip.cz/validace.php?kod=$kod");
             return true;
         }else{
             return false;
@@ -216,7 +216,8 @@
     }
 
     function poslimail($komu, $predmet, $zprava ){
-        $from = '<team@dametrip.cz>'; //change this to your email address
+        echo "<p style='background-color: red; color: white;padding: 5px;'>Milý majiteli emailu $komu. v této kritické chvíli vám měl přijít email s předmětem '$predmet', který by vám pověděl následující: '$zprava'. To, že vám nepřišel, je nám srdečné líto. Až se boj se zaměstnaneckou disciplínou opět dostane pod kontrolu, budete od nás emaily dostávat zase tak, jak by měli. Martin z Dámetripu</p>";
+        /*$from = '<team@dametrip.cz>'; //change this to your email address
         $to = $komu; // change to address
         $subject = $predmet; // subject of mail
         $body = $zprava; //content of mail
@@ -236,7 +237,7 @@
             ));
 
         // Send the mail
-        $mail = $smtp->send($to, $headers, $body);
+        $mail = $smtp->send($to, $headers, $body);*/
     }
 
 ?>
