@@ -3,11 +3,11 @@
         include "databaze.php";
     ?>
     <body>
-        <form method="post">
-            <input name="Komu" /> E-mail příjemce<br />
-            <input name="Predmet" /> Předmět<br />
+        <form method="post" target="https://beta.dametrip.cz/contact.php">
+            <input name="name" /> jméno<br />
+            <input name="mail" /> váš mail<br />
             Obsah zprávy:<br />
-            <textarea name="Text"></textarea><br />
+            <textarea name="message"></textarea><br />
             <input type="submit" value="odeslat" name="cudlik" />
         </form>
        <?php
