@@ -34,7 +34,7 @@
                 Kod TEXT,
                 Timestamp INT);";
         $ok1=dotaz($dotaz);
-        
+
         $dotaz="DROP TABLE geocodes;";
         dotaz($dotaz);
         $dotaz="CREATE TABLE geocodes(
@@ -47,9 +47,9 @@
         }else{
             return false;
         }
-        
+
     }
-    
+
     function pridej($Jmeno, $Vek, $Email, $Bydliste, $Cinnost, $Destinace){ //přidá uživatele do databáze
         loguj("Přidávám nového uživatele do databáze....");
         $nextId=rand(0,999999999);
@@ -58,19 +58,19 @@
         $Destinace=geocode($Destinace);
         $timestamp=time();
         $ok=dotaz("INSERT INTO lidi VALUES($nextId,'$Jmeno',$Vek,'$Email','$Bydliste','$Cinnost','$Destinace',0,$kod,$timestamp)");
-        
+
         if($ok){
             posliMail($Email,"Dámetrip.cz - Potvrzení emailové adresy","http://beta.dametrip.cz/validace.php?kod=$kod");
             return true;
         }else{
             return false;
         }
-        
+
     }
 
     function smaz($id){
         if($id=="" or !$id){return false;}
-        $ok=dotaz("DELETE FROM lidi WHERE Id='$id';");    
+        $ok=dotaz("DELETE FROM lidi WHERE Id='$id';");
         if($ok){
             return true;
         }else{
@@ -93,7 +93,7 @@
 
     function dotaz($dotaz){
         global $link;
-        
+
         if(!$link){prihlasit();}
         loguj("Spouštím dotaz: $dotaz");
         $vysledek=mysqli_query($link, $dotaz);
@@ -105,12 +105,12 @@
             loguj("Dotaz se nezdařil");
             return false;
         }
-        
+
     }
 
     function prihlasit(){
         global $mysqlLogin, $mysqlHeslo, $mysqlServer, $mysqlDatabase, $link;
-        
+
         $link=mysqli_connect($mysqlServer,$mysqlLogin, $mysqlHeslo);
         $ok=mysqli_select_db($link, $mysqlDatabase);
         return $link;
@@ -119,7 +119,7 @@
     function geocode($nazev){
         global $apiKey;
         $maxAge=2629743; //jednou za měsíc obnovit
-        
+
         loguj("Geocoduju $nazev");
         $nazev=str_replace(" ","+",$nazev); //snad tam nebudou dvojité mezery... ty by to neměly rozbít, ale stejně...
         loguj("hledam v $nazev v cache tabulce");
@@ -158,20 +158,20 @@
         return $vystup;
     }
 
-    function vzdalenost($lat1,$lon1,$lat2,$lon2){
-        
+    function vzdalenost($lat1=99,$lon1=99,$lat2=99,$lon2=99){
+
         loguj("počítám vzdálenost mezi $lat1, $lon1 a $lat2,$lon2");
         $R=6378;
         $dLat=deg2rad($lat1-$lat2);
         $dLon=deg2rad($lon1-$lon2);
         $lat1=deg2rad($lat1);
         $lat2=deg2rad($lat2);
-        
+
         $a=sin($dLat/2)*sin($dLat/2)+sin($dLon/2)*sin($dLon/2)*cos($lat1)*cos($lat2);
         $c=2*atan2(sqrt(a),sqrt(1-a));
-        
-        return rand(1,100);
-        //return $R*$c;
+
+        //return rand(1,100);
+        return $R*$c;
     }
 
     function matchni($id){ //zatím na základě vzdáleností destinací a bydlišť bez vah
@@ -179,22 +179,31 @@
         $iBydliste=1;
         $iCinnost=1; //zatím moc nefunguje
         $iVek=1;
-        
-        
+
+
         $ja=mysqli_fetch_array(dotaz("SELECT Destinace, Bydliste, Cinnost, Vek, Id FROM lidi WHERE Id=$id;"));
         $vysledek=dotaz("SELECT Destinace, Bydliste, Cinnost, Vek, Id FROM lidi WHERE Id!=$id and Validovano=1;");
         $kandidatu=mysqli_num_rows($vysledek);
         $min=100000000000000;//nahradit něčím jako float.max v C#
         for($x=0; $x<$kandidatu; $x++){
-            $kandidati[$x]=mysqli_fetch_array($vysledek);
-            echo json_decode($kandidati[$x][0])->results[0]->geometry->location->lat;
-            $kandidati[$x][5]=vzdalenost(json_decode($kandidati[$x][0])->results[0]->geometry->location->lat,json_decode($kandidati[$x][0])->results[0]->geometry->location->lon,json_decode($ja[0])->results[0]->geometry->location->lat,json_decode($ja[0])->results[0]->geometry->location->lng); //vzájemná  vzdálesnost destinací
-            $kandidati[$x][6]=vzdalenost(json_decode($kandidati[$x][1])->results[0]->geometry->location->lat,json_decode($kandidati[$x][1])->results[0]->geometry->location->lon,json_decode($ja[1])->results[0]->geometry->location->lat,json_decode($ja[1])->results[0]->geometry->location->lng); //vzájemná vzdálesnost bydlišť
-            if($kandidati[$x][2]==$ja[2]){$kandidati[$x][7]=1;}else{$kandidati[$x][7]=0;} //shodují se aktivity?
-            $kandidati[$x][8]=abs($kandidati[$x][3]-$ja[3]); //rozdíl věku
-            if($kandidati[$x][5]+$kandidati[$x][6]<$min){$min=$kandidati[$x][5]+$kandidati[$x][6]; $match=$kandidati[$x];}
+            $kandidat=mysqli_fetch_array($vysledek);
+            //echo json_decode($kandidati[$x][0])->results[0]->geometry->location->lat;
+            $latJa=json_decode($ja[0])->results[0]->geometry->location->lat; //tohle funguje
+            $lonJa=json_decode($ja[0])->results[0]->geometry->location->lng;
+            $latKandidat=json_decode($kandidati[0])->results[0]->geometry->location->lat;
+            $lonKandidat=json_decode($kandidati[0])->results[0]->geometry->location->lng;
+            echo $latKandidat;
+            $kandidat[5]=vzdalenost($latKandidat,$lonKandidat,$latJa,$lonJa); //vzájemná  vzdálesnost destinací
+            $latJa=json_decode($ja[1])->results[0]->geometry->location->lat;
+            $lonJa=json_decode($ja[1])->results[0]->geometry->location->lng;
+            $latKandidat=json_decode($kandidat[1])->results[0]->geometry->location->lat;
+            $lonKandidat=json_decode($kandidat[1])->results[0]->geometry->location->lng;
+            $kandidat[6]=vzdalenost($latKandidat,$lonKandidat,$latJa,$lonJa);; //vzájemná vzdálesnost bydlišť
+            if($kandidat[2]==$ja[2]){$kandidat[7]=1;}else{$kandidat[7]=0;} //shodují se aktivity?
+            $kandidat[8]=abs($kandidat[3]-$ja[3]); //rozdíl věku
+            if($kandidat[5]+$kandidat[6]<$min){$min=$kandidat[5]+$kandidat[6]; $match=$kandidat;}
         }
-        
+
         return $match;
         /*
         $match[0]...destinace

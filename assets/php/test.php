@@ -20,28 +20,28 @@
             <input name="Bydliste" /> Bydliště<br />
             <input name="Cinnost" /> Činnost<br />
             <input name="Destinace" /> Destinace<br />
-            
+
             <input type="submit" value="Přidat" name="cudlik" />
         </form>
-        
+
         <form method="post">
             <h1>Smazat uživatele</h1>
-            <input name="Id" /> Id toho, koho chceme smazat<br />
+            <input name="IdtoDelete" /> Id toho, koho chceme smazat<br />
             <input type="submit" value="Smazat" name="cudlik" />
             <?php
-                if(isset($_POST["Id"])){
-                    echo smaz($_POST["Id"]);    
+                if(isset($_POST["IdtoDelete"])){
+                    echo smaz($_POST["IdtoDelete"]);
                 }
             ?>
         </form>
-        
+
         <form method="post">
             <h1>Najít parťáka</h1>
             <input name="Id" /> Id toho, koho chceme s někým spojit<br />
             <input type="submit" value="Spojit" name="cudlik" />
             <?php
                 if(isset($_POST["Id"])){
-                    print_r(matchni($_POST["Id"]));    
+                    print_r(matchni($_POST["Id"]));
                 }
             ?>
         </form>
@@ -53,8 +53,8 @@
                     echo "ERROR - někde se stala chyba";
                 }
             }
-            
-                //výpis z tabulky lidí                                                                             
+
+                //výpis z tabulky lidí
                 $vysledek=dotaz("SELECT * FROM lidi;");
                 $radku=mysqli_num_rows($vysledek);
                 $sloupcu=mysqli_num_fields($vysledek);
