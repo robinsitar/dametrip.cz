@@ -181,12 +181,13 @@
         $iVek=1;
 
 
-        $ja=mysqli_fetch_array(dotaz("SELECT Destinace, Bydliste, Cinnost, Vek, Id FROM lidi WHERE Id=$id;"));
-        $vysledek=dotaz("SELECT Destinace, Bydliste, Cinnost, Vek, Id FROM lidi WHERE Id!=$id and Validovano=1;");
+        $ja=mysqli_fetch_array(dotaz("SELECT Destinace, Bydliste, Cinnost, Vek, Id FROM lidi WHERE Id='$id';"));
+        $vysledek=dotaz("SELECT Destinace, Bydliste, Cinnost, Vek, Id FROM lidi WHERE Id!='$id' and Validovano='1';");
         $kandidatu=mysqli_num_rows($vysledek);
         $min=100000000000000;//nahradit něčím jako float.max v C#
         for($x=0; $x<$kandidatu; $x++){
             $kandidat=mysqli_fetch_array($vysledek);
+            $loguj("fetchuju x $x -> výsledkem je $kandidat");
             //echo json_decode($kandidati[$x][0])->results[0]->geometry->location->lat;
             $latJa=json_decode($ja[0])->results[0]->geometry->location->lat; //tohle funguje
             $lonJa=json_decode($ja[0])->results[0]->geometry->location->lng;
@@ -223,7 +224,7 @@
         //chtělo by to zapisovat do csvčka
         $timestamp=time();
         $fp=fopen("log.html","a");
-        fwrite($fp, "$timestamp: $zapis </br>");
+        fwrite($fp, "$timestamp: $zapis <hr/>");
         fclose($fp);
     }
 
