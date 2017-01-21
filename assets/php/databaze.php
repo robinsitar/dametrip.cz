@@ -159,7 +159,7 @@
     }
 
     function vzdalenost($lat1=99,$lon1=99,$lat2=99,$lon2=99){
-
+    
         loguj("počítám vzdálenost mezi $lat1, $lon1 a $lat2,$lon2");
         $R=6378;
         $dLat=deg2rad($lat1-$lat2);
@@ -252,5 +252,15 @@
         // Send the mail
         $mail = $smtp->send($to, $headers, $body);*/
     }
+
+function pridejZCSV($soubor){
+    $fp=fopen($soubor,"r");
+    $i=0;
+    while (!feof($soubor)){
+        $lidi[$i]=explode(",",fgets($fp));
+        $i++;
+    }
+    print_r($lidi);
+}
 
 ?>
