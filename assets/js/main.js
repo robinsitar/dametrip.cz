@@ -259,7 +259,12 @@
         
         $("body").on("keyup",function(e) {   
             if(e.keyCode == 13 || e.keyCode == 40) {
-                nextOtazka();
+                if($(".formularOtazkaWrapper.active").hasClass("posledni")) {
+                    $("#mainForm").submit();
+                 }
+                else {
+                    nextOtazka();
+                 }
             }
             if(e.keyCode == 38) {
              if($(".formularOtazkaWrapper.active").hasClass("prvni") == false){
@@ -280,6 +285,9 @@ $(document).ready(function() {
                     $(".formularDalsi").slideUp(1000);
                     $(".formularPredchozi").slideUp(1000);
                     $(".endingText").delay(1100).show("slide", { direction: "right" }, 1000);
+                },
+                error: function () {
+                    $(".formularError").show();
                 }
             });
          e.preventDefault();

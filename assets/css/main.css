@@ -1670,6 +1670,7 @@
 	input[type="text"],
 	input[type="password"],
 	input[type="email"],
+    input[type="number"],
 	select,
 	textarea {
 		-moz-appearance: none;
@@ -1743,6 +1744,7 @@
 	input[type="text"],
 	input[type="password"],
 	input[type="email"],
+    input[type="number"],
 	select {
 		height: 3.5em;
 	}
@@ -2843,6 +2845,7 @@
 			.wrapper.style3 input[type="text"],
 			.wrapper.style3 input[type="password"],
 			.wrapper.style3 input[type="email"],
+            .wrapper.style3 input[type="number"],
 			.wrapper.style3 select,
 			.wrapper.style3 textarea {
 				background: rgba(255, 255, 255, 0.2);
@@ -3923,4 +3926,10 @@ html, body {
 }
 .prvni {
     display: block;
+}
+.formularError {
+    display: none;
+    margin-top: 10px;
+    color: rgba(237, 73, 51, 0.9);
+    font-size: 16px;
 }
