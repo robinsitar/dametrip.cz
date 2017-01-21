@@ -18,6 +18,8 @@
     $apiKey="AIzaSyBCJLPKH2GQ-uGV_F6B6gvVweFO_MQrbNQ";
 
     function inicializovat(){ //vyčistění databáze
+        loguj("byla zavolana funkce inicializovat() - RESETUJE VŠECHNY TABULKY");
+        
         loguj("RESET DATABÁZE!!!");
         //tabulka uživatelů
         $dotaz="DROP TABLE lidi;";
@@ -51,7 +53,7 @@
     }
 
     function pridej($Jmeno, $Vek, $Email, $Bydliste, $Cinnost, $Destinace){ //přidá uživatele do databáze
-        loguj("Přidávám nového uživatele do databáze....");
+        loguj("byla zavolana funkce pridej($Jmeno, $Vek, $Email, $Bydliste, $Cinnost, $Destinace)");
         $nextId=rand(0,999999999);
         $kod=rand(11111111,99999999);
         $Bydliste=geocode($Bydliste);
@@ -69,6 +71,8 @@
     }
 
     function smaz($id){
+        loguj("byla zavolana funkce smaz($id)");
+        
         if($id=="" or !$id){return false;}
         $ok=dotaz("DELETE FROM lidi WHERE Id='$id';");
         if($ok){
@@ -79,6 +83,8 @@
     }
 
     function uprav($id, $Jmeno, $Vek, $Email,$Pohlavi, $Bydliste, $Cinnost, $Destinace, $Validovano, $Kod){
+        loguj("byla zavolana funkce uprav($id, $Jmeno, $Vek, $Email,$Pohlavi, $Bydliste, $Cinnost, $Destinace, $Validovano, $Kod)");
+        
         if($id=="" or !$id){return false;}
         $Bydliste=geocode($Bydliste);
         $Destinace=geocode($Destinace);
@@ -92,10 +98,11 @@
     }
 
     function dotaz($dotaz){
+        loguj("byla zavolana funkce dotaz($dotaz)");
+        
         global $link;
 
         if(!$link){prihlasit();}
-        loguj("Spouštím dotaz: $dotaz");
         $vysledek=mysqli_query($link, $dotaz);
         if($vysledek){
             loguj("Dotaz se zdařil");
@@ -109,6 +116,8 @@
     }
 
     function prihlasit(){
+        loguj("byla zavolana funkce prihlasit()");
+        
         global $mysqlLogin, $mysqlHeslo, $mysqlServer, $mysqlDatabase, $link;
 
         $link=mysqli_connect($mysqlServer,$mysqlLogin, $mysqlHeslo);
@@ -117,6 +126,8 @@
     }
 
     function geocode($nazev){
+        loguj("byla zavolana funkce geocode($nazev)");
+        
         global $apiKey;
         $maxAge=2629743; //jednou za měsíc obnovit
 
@@ -158,14 +169,14 @@
             loguj("vystupem geokódování je: $vystup");
             return $vystup;    
         }else{
-            loguj("při geokódování nastala chyba, nepodařilo se najít správný výsledek");
-            return $false;
+            loguj("při geokódování nastala chyba: '".$vystup->status."'");
+            return false;
         }
     }
 
     function vzdalenost($lat1=99,$lon1=99,$lat2=99,$lon2=99){
+        loguj("byla zavolana funkce vzdalenost($lat1,$lon1,$lat2,$lon2)");
     
-        loguj("počítám vzdálenost mezi $lat1, $lon1 a $lat2,$lon2");
         $R=6378;
         $lat2=deg2rad($lat2);
         $lat1=deg2rad($lat1);
@@ -176,10 +187,14 @@
         $c=2*atan2(sqrt($a),sqrt(1-$a));
 
         //return rand(1,100);
-        return $R*$c;
+        $vzdalenost=$R*$c;
+        loguj("Vzdálenost je $vzdalenost");
+        return $vzdalenost;
     }
 
-    function matchni($id){ //zatím na základě vzdáleností destinací a bydlišť bez vah
+    function matchni($id){ //zatím na základě součtu vzdáleností destinací a bydlišť bez vah
+        loguj("byla zavolana funkce matchni($id)");
+        
         $iDestinace=1;
         $iBydliste=1;
         $iCinnost=1; //zatím moc nefunguje
@@ -191,14 +206,13 @@
         $kandidatu=mysqli_num_rows($vysledek);
         $min=100000000000000;//nahradit něčím jako float.max v C#
         for($x=0; $x<$kandidatu; $x++){
+            loguj("Zvažuji kandidáta č. $x");
+            
             $kandidat=mysqli_fetch_array($vysledek);
-            loguj("fetchuju x $x -> výsledkem je $kandidat");
-            //echo json_decode($kandidati[$x][0])->results[0]->geometry->location->lat;
-            $latJa=json_decode($ja[0])->results[0]->geometry->location->lat; //tohle funguje
+            $latJa=json_decode($ja[0])->results[0]->geometry->location->lat;
             $lonJa=json_decode($ja[0])->results[0]->geometry->location->lng;
-            $latKandidat=json_decode($kandidati[0])->results[0]->geometry->location->lat;
-            $lonKandidat=json_decode($kandidati[0])->results[0]->geometry->location->lng;
-            echo $latKandidat;
+            $latKandidat=json_decode($kandidat[0])->results[0]->geometry->location->lat;
+            $lonKandidat=json_decode($kandidat[0])->results[0]->geometry->location->lng;
             $kandidat[5]=vzdalenost($latKandidat,$lonKandidat,$latJa,$lonJa); //vzájemná  vzdálesnost destinací
             $latJa=json_decode($ja[1])->results[0]->geometry->location->lat;
             $lonJa=json_decode($ja[1])->results[0]->geometry->location->lng;
@@ -227,13 +241,15 @@
     function loguj($zapis){
         //echo "$zapis<br />";
         //chtělo by to zapisovat do csvčka
-        $timestamp=time();
+        $timestamp=microtime(true);
         $fp=fopen("log.html","a");
         fwrite($fp, "$timestamp: $zapis <hr/>");
         fclose($fp);
     }
 
-    function poslimail($komu, $predmet, $zprava ){
+    function poslimail($komu, $predmet, $zprava){
+        loguj("byla zavolana funkce poslimail($komu, $predmet, $zprava )");
+        
         echo "<p style='background-color: red; color: white;padding: 5px;'>Milý majiteli emailu $komu. v této kritické chvíli vám měl přijít email s předmětem '$predmet', který by vám pověděl následující: '$zprava'. To, že vám nepřišel, je nám srdečné líto. Až se boj se zaměstnaneckou disciplínou opět dostane pod kontrolu, budete od nás emaily dostávat zase tak, jak by měli. Martin z Dámetripu</p>";
         /*$from = '<team@dametrip.cz>'; //change this to your email address
         $to = $komu; // change to address
@@ -258,17 +274,18 @@
         $mail = $smtp->send($to, $headers, $body);*/
     }
 
-function pridejZCSV($soubor){ //ve formátu Jméno, Bydliště, Destinace\n
+function pridejZCSV($soubor){ //ve formátu Jméno, Bydliště, Destinace, Email\n
+    loguj("byla zavolana funkce pridejZCSV($soubor)");
     $fp=fopen($soubor,"r");
     $i=0;
     while (true){
         $clovek=fgets($fp);
         if($clovek!=""){
-            $lidi[$i]=explode(",",$clovek);
+            $lidi[$i]=explode(",",$clovek);        
+        pridej($lidi[$i][0], 99, $lidi[$i][3], $lidi[$i][1], "nezadano", $lidi[$i][2]);    
+        $ok=dotaz("UPDATE lidi SET Validovano=1 WHERE Email='".$lidi[$i][3]."';");
         $i++;
         }
-        pridej($lidi[$i][0],99,$lidi[$i][3],$lidi[$i][1],$lidi[$i][2]);
-        $ok=dotaz("UPDATE lidi SET Validovano=1 WHERE Email='".$lidi[$i][3]."';");
         else{
             break;
         }
@@ -278,6 +295,8 @@ function pridejZCSV($soubor){ //ve formátu Jméno, Bydliště, Destinace\n
 }
 
 function vypisTabulku($tabulka){
+    loguj("byla zavolana funkce vypisTabulku($tabulka)");
+    
     echo "<table border='solid'>";
     for($y=0; $y<sizeof($tabulka); $y++){
         echo "<tr>";
