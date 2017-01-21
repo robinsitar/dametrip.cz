@@ -266,12 +266,12 @@ function pridejZCSV($soubor){
             break;
         }
     }
-    print_r($lidi);
+    vypisTabulku($lidi);
     return $lidi;
 }
 
 function vypisTabulku($tabulka){
-    echo "<table>";
+    echo "<table border='solid'>";
     for($y=0; $y<sizeof($tabulka); $y++){
         echo "<tr>";
         for($x=0; $x<sizeof($tabulka[$y]); $x++){
@@ -279,7 +279,7 @@ function vypisTabulku($tabulka){
         }
         echo "</tr>";
     }
-    </table>
+    echo "</table>";
 }
 
 ?>
