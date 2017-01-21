@@ -90,8 +90,9 @@
 			}
 
 	});
+ })(jQuery);   
+    // Submitování form skrz Aajax
 
-})(jQuery);
         var indicator = true;
         $(".formularInput").on('input propertychange focus', function() {
             kontrolOtazka();
@@ -195,17 +196,20 @@
                 $(".formularOtazkaWrapper.active").hide("slide", { direction: "left" }, 1000);
                 $(".formularDalsi").slideUp(1000);
                 $(".formularPredchozi").slideUp(1000);
-                $(".endingText").delay(1100).show("slide", { direction: "right" }, 1000);;
+                $(".endingText").delay(1100).show("slide", { direction: "right" }, 1000);
    
             }
-             if($(".formularOtazkaWrapper.active").hasClass("predposledni")){
+             if($(".formularOtazkaWrapper.active").hasClass("predposledni")) {
                 
                 $(".formularDalsiText").text("Odeslat");
                 $(".formularDalsiSipka").hide(); // Přepínaní na konečnej submit
                 $(".formularKonecnaSipka").show();
-                $(".formularDalsiWrapper").off("click").on("click", function() {document.forms[0].submit()}) //Zapnutí submitu
+                $(".formularDalsiWrapper").off("click").on("click", function(e) {
+            
+                 $("#mainForm").submit(); //Zapnutí submitu
                 
-            }
+            });
+          };
             
             activator = false;
            if($(".formularOtazkaWrapper.active").hasClass("posledni") == false) {    
@@ -263,3 +267,21 @@
              }
             }
         });
+
+$(document).ready(function() {
+    
+    $("#mainForm").on("submit", function (e) {
+          $.ajax({
+                type: "POST",
+                url: "./pridat.php",
+                data: $("#mainForm").serialize(),
+                success: function () {
+                    $(".formularOtazkaWrapper.active").hide("slide", { direction: "left" }, 1000);
+                    $(".formularDalsi").slideUp(1000);
+                    $(".formularPredchozi").slideUp(1000);
+                    $(".endingText").delay(1100).show("slide", { direction: "right" }, 1000);
+                }
+            });
+         e.preventDefault();
+        });
+});
