@@ -142,29 +142,9 @@
             //echo $vystup;
             dotaz("INSERT INTO geocodes VALUES ('$nazev','$vystup','$timestamp');");
         }else{
-            loguj("Našel jsem. zjišťuji stáří...");
+            loguj("Našel jsem.");
             $vysledky=mysqli_fetch_array($ok);
-            $stari=time()-$vysledky[2];
-            //if($stari<$maxAge){
-                loguj("stáří $stari je v pořádku");
-                $vystup=$vysledky[0];
-            /*}
-            else{
-                loguj("záznam je příliš starý - $stari, rekurzivně aktualizuji");
-                dotaz("DELETE FROM geocodes WHERE Nazev='$nazev'");
-                $vysledek=geocode($nazev);
-                loguj("rekurze úspěšně ukončena");
-            }*/
-        }
-        //echo "$vystup<br />";
-        /*echo "$soubor <br />";
-        $fp=fopen($soubor,"r");
-        //$vystup=fread($fp,filesize($soubor));
-        $vystup="";
-        while(!feof($fp)){
-            $vystup+=fgets($fp);
-        }
-        loguj("vysledkem je $vystup");*/
+            $vystup=$vysledky[0];
         if($vystup->status=="OK"){
             loguj("vystupem geokódování je: $vystup");
             return $vystup;    
