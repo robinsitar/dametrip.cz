@@ -256,11 +256,30 @@
 function pridejZCSV($soubor){
     $fp=fopen($soubor,"r");
     $i=0;
-    while (!feof($soubor)){
-        $lidi[$i]=explode(",",fgets($fp));
+    while (true){
+        $clovek=fgets($fp);
+        if($clovek!=""){
+            $lidi[$i]=explode(",",$clovek);
         $i++;
+        }
+        else{
+            break;
+        }
     }
     print_r($lidi);
+    return $lidi;
+}
+
+function vypisTabulku($tabulka){
+    echo "<table>";
+    for($y=0; $y<sizeof($tabulka); $y++){
+        echo "<tr>";
+        for($x=0; $x<sizeof($tabulka[$y]); $x++){
+            echo "<td>".$tabulka[$y][$x]."</td>";
+        }
+        echo "</tr>";
+    }
+    </table>
 }
 
 ?>
