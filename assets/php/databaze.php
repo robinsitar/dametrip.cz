@@ -154,21 +154,26 @@
             $vystup+=fgets($fp);
         }
         loguj("vysledkem je $vystup");*/
-        loguj("vystupem geokódování je: $vystup");
-        return $vystup;
+        if($vystup->status=="OK"){
+            loguj("vystupem geokódování je: $vystup");
+            return $vystup;    
+        }else{
+            loguj("při geokódování nastala chyba, nepodařilo se najít správný výsledek");
+            return $false;
+        }
     }
 
     function vzdalenost($lat1=99,$lon1=99,$lat2=99,$lon2=99){
     
         loguj("počítám vzdálenost mezi $lat1, $lon1 a $lat2,$lon2");
         $R=6378;
+        $lat2=deg2rad($lat2);
+        $lat1=deg2rad($lat1);
         $dLat=deg2rad($lat1-$lat2);
         $dLon=deg2rad($lon1-$lon2);
-        $lat1=deg2rad($lat1);
-        $lat2=deg2rad($lat2);
 
         $a=sin($dLat/2)*sin($dLat/2)+sin($dLon/2)*sin($dLon/2)*cos($lat1)*cos($lat2);
-        $c=2*atan2(sqrt(a),sqrt(1-a));
+        $c=2*atan2(sqrt($a),sqrt(1-$a));
 
         //return rand(1,100);
         return $R*$c;
@@ -187,7 +192,7 @@
         $min=100000000000000;//nahradit něčím jako float.max v C#
         for($x=0; $x<$kandidatu; $x++){
             $kandidat=mysqli_fetch_array($vysledek);
-            $loguj("fetchuju x $x -> výsledkem je $kandidat");
+            loguj("fetchuju x $x -> výsledkem je $kandidat");
             //echo json_decode($kandidati[$x][0])->results[0]->geometry->location->lat;
             $latJa=json_decode($ja[0])->results[0]->geometry->location->lat; //tohle funguje
             $lonJa=json_decode($ja[0])->results[0]->geometry->location->lng;
@@ -253,7 +258,7 @@
         $mail = $smtp->send($to, $headers, $body);*/
     }
 
-function pridejZCSV($soubor){
+function pridejZCSV($soubor){ //ve formátu Jméno, Bydliště, Destinace\n
     $fp=fopen($soubor,"r");
     $i=0;
     while (true){
@@ -262,6 +267,8 @@ function pridejZCSV($soubor){
             $lidi[$i]=explode(",",$clovek);
         $i++;
         }
+        pridej($lidi[$i][0],99,$lidi[$i][3],$lidi[$i][1],$lidi[$i][2]);
+        $ok=dotaz("UPDATE lidi SET Validovano=1 WHERE Email='".$lidi[$i][3]."';");
         else{
             break;
         }
