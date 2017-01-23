@@ -2,7 +2,6 @@
     //TODO:
     //udělat nějakou zabezpečovací funkci, kterou se budou prohánět všechny user inputy.
     //automatchování
-    //cachovanou apíčkovou funkci - oboustranně
     //uživatel musí mít
         //mezeru ve jméně
         //zavináč a tečku v mailu
@@ -130,7 +129,6 @@
         loguj("byla zavolana funkce geocode($nazev)");
         
         global $apiKey;
-        $maxAge=2629743; //jednou za měsíc obnovit
 
         loguj("Geocoduju $nazev");
         $nazev=str_replace(" ","+",$nazev); //snad tam nebudou dvojité mezery... ty by to neměly rozbít, ale stejně...
@@ -158,19 +156,24 @@
     }
 
     function geo2lat($geo){
+        loguj("byla zavolana funkce geo2lat($geo)");
+        
         return json_decode($geo)->results[0]->geometry->location->lat;
     }
 
     function geo2lon($geo){
+        loguj("byla zavolana funkce geo2lon($geo)");
+        
         return json_decode($geo)->results[0]->geometry->location->lng;
     }
 
     function geo2name($geo){
+        loguj("byla zavolana funkce geo2name($geo)");
+        
         return json_decode($geo)->results[0]->formatted_address;
     }
-}
 
-    function vzdalenost($lat1=50,$lon1=50,$lat2=40,$lon2=40){
+    function vzdalenost($lat1,$lon1,$lat2,$lon2){
         loguj("byla zavolana funkce vzdalenost($lat1,$lon1,$lat2,$lon2)");
     
         $R=6378;
@@ -184,8 +187,23 @@
 
         //return rand(1,100);
         $vzdalenost=$R*$c;
-        loguj("Vzdálenost je $vzdalenost");
+        loguj("Vzdálenost je $vzdalenost Km");
         return $vzdalenost;
+    }
+
+    function vzdalenost2($lat1, $lon1, $lat2, $lon2){
+        $R=6371;
+        $dLat=deg2rad($lat2-$lat1);
+        $dLon=deg2rad($lon2-$lon1);
+        $lat1=deg2rad($lat1);
+        $lat2=deg2rad($lat2);
+        
+        $a=sin($dLat/2)*sin($dLat/2)+sin($dLon/2)*sin($dLon/2)*cos($lat1)*cos($lat2);
+        $c=2*atan2(sqrt($a),sqrt(1-$a));
+        $d=$R*$c;
+        
+        loguj("Vzdálenost je $vzdalenost");
+        return $d;
     }
 
     function matchni($id){ //zatím na základě součtu vzdáleností destinací a bydlišť bez vah
@@ -205,16 +223,15 @@
             loguj("Zvažuji kandidáta č. $x");
             
             $kandidat=mysqli_fetch_array($vysledek);
-            loguj("Kandidát: ".." ");
-            $latJa=json_decode($ja[0])->results[0]->geometry->location->lat;
-            $lonJa=json_decode($ja[0])->results[0]->geometry->location->lng;
-            $latKandidat=json_decode($kandidat[0])->results[0]->geometry->location->lat;
-            $lonKandidat=json_decode($kandidat[0])->results[0]->geometry->location->lng;
+            $latJa=geo2lat($ja[0]);
+            $lonJa=geo2lon($ja[0]);
+            $latKandidat=geo2lat($kandidat[0]);
+            $lonKandidat=geo2lon($kandidat[0]);
             $kandidat[5]=vzdalenost($latKandidat,$lonKandidat,$latJa,$lonJa); //vzájemná  vzdálesnost destinací
-            $latJa=json_decode($ja[1])->results[0]->geometry->location->lat;
-            $lonJa=json_decode($ja[1])->results[0]->geometry->location->lng;
-            $latKandidat=json_decode($kandidat[1])->results[0]->geometry->location->lat;
-            $lonKandidat=json_decode($kandidat[1])->results[0]->geometry->location->lng;
+            $latJa=geo2lat($ja[1]);
+            $lonJa=geo2lon($ja[1]);
+            $latKandidat=geo2lat($kandidat[1]);
+            $lonKandidat=geo2lon($kandidat[1]);
             $kandidat[6]=vzdalenost($latKandidat,$lonKandidat,$latJa,$lonJa);; //vzájemná vzdálesnost bydlišť
             if($kandidat[2]==$ja[2]){$kandidat[7]=1;}else{$kandidat[7]=0;} //shodují se aktivity?
             $kandidat[8]=abs($kandidat[3]-$ja[3]); //rozdíl věku
