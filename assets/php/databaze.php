@@ -18,9 +18,7 @@
     $apiKey="AIzaSyBCJLPKH2GQ-uGV_F6B6gvVweFO_MQrbNQ";
 
     function inicializovat(){ //vyčistění databáze
-        loguj("byla zavolana funkce inicializovat() - RESETUJE VŠECHNY TABULKY");
-        
-        loguj("RESET DATABÁZE!!!");
+        loguj("byla zavolana funkce inicializovat() - RESETUJE VŠECHNY TABULKY, kromě geocache");
         //tabulka uživatelů
         $dotaz="DROP TABLE lidi;";
         dotaz($dotaz);
@@ -37,14 +35,14 @@
                 Timestamp INT);";
         $ok1=dotaz($dotaz);
 
-        $dotaz="DROP TABLE geocodes;";
+        /*$dotaz="DROP TABLE geocodes;";
         dotaz($dotaz);
         $dotaz="CREATE TABLE geocodes(
                 Nazev TEXT,
                 Vysledek TEXT,
                 Timestamp INT);";
-        $ok2=dotaz($dotaz);
-        if($ok1 && $ok2){
+        $ok2=dotaz($dotaz);*/
+        if($ok1){
             return true;
         }else{
             return false;
@@ -59,6 +57,9 @@
         $Bydliste=geocode($Bydliste);
         $Destinace=geocode($Destinace);
         $timestamp=time();
+        if(json_decode($Bydliste)->status =="ZERO_RESULTS" || json_decode($Destinace)->status =="ZERO_RESULTS"){
+            return false;
+        }
         $ok=dotaz("INSERT INTO lidi VALUES($nextId,'$Jmeno',$Vek,'$Email','$Bydliste','$Cinnost','$Destinace',0,$kod,$timestamp)");
 
         if($ok){
@@ -136,8 +137,8 @@
         loguj("hledam v $nazev v cache tabulce");
         $ok=dotaz("SELECT Vysledek, Timestamp FROM geocodes WHERE Nazev='$nazev';");
         $timestamp=time();
-        if(mysqli_num_rows($ok)<1){//nic to nenašlo, jdeme googlovat
-            loguj("Nic jsem nenašel");
+        if(mysqli_num_rows($ok)==0){//nic to nenašlo, jdeme googlovat
+            loguj("V cache tabulce nic není");
             $vystup=file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?address=$nazev&key=$apiKey");
             //echo $vystup;
             dotaz("INSERT INTO geocodes VALUES ('$nazev','$vystup','$timestamp');");
@@ -145,16 +146,31 @@
             loguj("Našel jsem.");
             $vysledky=mysqli_fetch_array($ok);
             $vystup=$vysledky[0];
-        if($vystup->status=="OK"){
+        }
+        /*if($vystup->status=="OK"){
             loguj("vystupem geokódování je: $vystup");
             return $vystup;    
         }else{
             loguj("při geokódování nastala chyba: '".$vystup->status."'");
             return false;
-        }
+        }*/
+        return $vystup;
     }
 
-    function vzdalenost($lat1=99,$lon1=99,$lat2=99,$lon2=99){
+    function geo2lat($geo){
+        return json_decode($geo)->results[0]->geometry->location->lat;
+    }
+
+    function geo2lon($geo){
+        return json_decode($geo)->results[0]->geometry->location->lng;
+    }
+
+    function geo2name($geo){
+        return json_decode($geo)->results[0]->formatted_address;
+    }
+}
+
+    function vzdalenost($lat1=50,$lon1=50,$lat2=40,$lon2=40){
         loguj("byla zavolana funkce vzdalenost($lat1,$lon1,$lat2,$lon2)");
     
         $R=6378;
@@ -189,6 +205,7 @@
             loguj("Zvažuji kandidáta č. $x");
             
             $kandidat=mysqli_fetch_array($vysledek);
+            loguj("Kandidát: ".." ");
             $latJa=json_decode($ja[0])->results[0]->geometry->location->lat;
             $lonJa=json_decode($ja[0])->results[0]->geometry->location->lng;
             $latKandidat=json_decode($kandidat[0])->results[0]->geometry->location->lat;
@@ -201,7 +218,7 @@
             $kandidat[6]=vzdalenost($latKandidat,$lonKandidat,$latJa,$lonJa);; //vzájemná vzdálesnost bydlišť
             if($kandidat[2]==$ja[2]){$kandidat[7]=1;}else{$kandidat[7]=0;} //shodují se aktivity?
             $kandidat[8]=abs($kandidat[3]-$ja[3]); //rozdíl věku
-            if($kandidat[5]+$kandidat[6]<$min){$min=$kandidat[5]+$kandidat[6]; $match=$kandidat;}
+            if(/*$kandidat[5]+*/$kandidat[6]<$min){$min=/*$kandidat[5]+*/$kandidat[6]; $match=$kandidat;}
         }
 
         return $match;
@@ -254,7 +271,8 @@
         $mail = $smtp->send($to, $headers, $body);*/
     }
 
-function pridejZCSV($soubor){ //ve formátu Jméno, Bydliště, Destinace, Email\n
+function pridejZCSV($soubor){ //ve formátu 0 Jméno, 1 Bydliště, 2 Destinace, 3 Email
+    //$Jmeno, $Vek, $Email, $Bydliste, $Cinnost, $Destinace - pořadí parametrů v přidávací funkci
     loguj("byla zavolana funkce pridejZCSV($soubor)");
     $fp=fopen($soubor,"r");
     $i=0;

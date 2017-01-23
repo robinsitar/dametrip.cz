@@ -12,10 +12,10 @@
                 $ja=mysqli_fetch_array(dotaz("SELECT Id, Jmeno, Bydliste, Destinace FROM lidi WHERE Id='$myId'"));
                 if($match){
                     $on=mysqli_fetch_array(dotaz("SELECT Id, Jmeno, Bydliste, Destinace FROM lidi WHERE Id='".$match[4]."'"));
-                    echo "<tr><td>".$ja[0]."</td><td>".$ja[1]."</td><td>".json_decode($ja[2])->results[0]->formatted_address."</td><td>".json_decode($ja[3])->results[0]->formatted_address."</td><td>".$match[0]."</td><td>".$match[1]."</td><td>".json_decode($match[2])->results[0]->formatted_address."</td><td>".json_decode($match[3])->results[0]->formatted_address."</td></tr>";
+                    echo "<tr><td>".$ja[0]."</td><td>".$ja[1]."</td><td>".json_decode($ja[2])->results[0]->formatted_address."</td><td>".json_decode($ja[3])->results[0]->formatted_address."</td><td>".$on[0]."</td><td>".$on[1]."</td><td>".json_decode($on[2])->results[0]->formatted_address."</td><td>".json_decode($on[3])->results[0]->formatted_address."</td><td>".$match[5]."</td></tr>";
                 }
                 else{
-                    echo "<tr><td>".$ja[0]."</td><td>".$ja[1]."</td><td>".json_decode($ja[2])->results[0]->formatted_address."</td><td>".json_decode($ja[3])->results[0]->formatted_address."</td><td>Nepodařilo se najít parťáka</td><td></td><td></td><td></td>";
+                    echo "<tr><td>".$ja[0]."</td><td>".$ja[1]."</td><td>".json_decode($ja[2])->results[0]->formatted_address."</td><td>".json_decode($ja[3])->results[0]->formatted_address."</td><td>Nepodařilo se najít parťáka</td><td></td><td></td><td></td><td></td>";
                 }
             }
             echo "</table>";
