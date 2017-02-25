@@ -210,9 +210,9 @@
         loguj("byla zavolana funkce matchni($id)");
         
         $iDestinace=1;
-        $iBydliste=1;
-        $iCinnost=1; //zatím moc nefunguje
-        $iVek=1;
+        $iBydliste=0;
+        $iCinnost=0; //zatím moc nefunguje
+        $iVek=0;
 
 
         $ja=mysqli_fetch_array(dotaz("SELECT Destinace, Bydliste, Cinnost, Vek, Id FROM lidi WHERE Id='$id';"));
@@ -233,9 +233,10 @@
             $latKandidat=geo2lat($kandidat[1]);
             $lonKandidat=geo2lon($kandidat[1]);
             $kandidat[6]=vzdalenost($latKandidat,$lonKandidat,$latJa,$lonJa);; //vzájemná vzdálesnost bydlišť
-            if($kandidat[2]==$ja[2]){$kandidat[7]=1;}else{$kandidat[7]=0;} //shodují se aktivity?
+            if($kandidat[2]==$ja[2]){$kandidat[7]=0;}else{$kandidat[7]=1;} //shodují se aktivity?
             $kandidat[8]=abs($kandidat[3]-$ja[3]); //rozdíl věku
-            if(/*$kandidat[5]+*/$kandidat[6]<$min){$min=/*$kandidat[5]+*/$kandidat[6]; $match=$kandidat;}
+            $kandidat[9]=$kandidat[5]*$iDestinace+$kandidat[6]*$iBydliste+$kandidat[7]*$iCinnost+$kandidat[8]*$iVek;
+            if($kandidat[9]<$min){$min=$kandidat[9]; $match=$kandidat;}
         }
 
         return $match;
@@ -249,6 +250,7 @@
         $match[6]...vzájemná vzdálenost bydlišť
         $match[7]...stejná aktivita? 1/0
         $match[8]...rozdíl věku
+        $match[9]...index super parťáka - nižší je lepší, index 0 jsou klonové.
         */
     }
 
