@@ -96,6 +96,15 @@
         }
     }
 
+    function validuj($kod){
+        $ok=dotaz("UPDATE lidi SET Validovano=1 WHERE Kod=$kod");
+        if($ok){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     function dotaz($dotaz){
         loguj("byla zavolana funkce dotaz($dotaz)");
         
