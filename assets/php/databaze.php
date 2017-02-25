@@ -10,6 +10,8 @@
         //validní destinaci
         //do budoucna jednu z povolených aktivit
 
+    header('Content-type: text/html; charset=utf-8'); //kryštofův útržek :D
+
     $mysqlLogin="a148986_2";
     $mysqlHeslo="FmVW6LUj";
     $mysqlDatabase="d148986_2";
