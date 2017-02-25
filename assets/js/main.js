@@ -278,7 +278,7 @@ $(document).ready(function() {
     $("#mainForm").on("submit", function (e) {
           $.ajax({
                 type: "POST",
-                url: "./pridat.php",
+                url: "./assets/php/pridat.php",
                 data: $("#mainForm").serialize(),
                 success: function () {
                     $(".formularOtazkaWrapper.active").hide("slide", { direction: "left" }, 1000);
