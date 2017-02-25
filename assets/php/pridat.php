@@ -1,6 +1,8 @@
 <?php
+    loguj("Pokus o přidání nového uživatele...");
     if(isset($_POST["Jmeno"]) && isset($_POST["Vek"]) && isset($_POST["Email"]) && isset($_POST["Bydliste"]) && isset($_POST["Cinnost"]) && isset($_POST["Destinace"])){
         
+        loguj("Isset validace úspěšná!");
         $Jmeno=$_POST["Jmeno"];
         $Vek=$_POST["Vek"];
         $Email=$_POST["Email"];
