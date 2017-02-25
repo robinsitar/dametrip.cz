@@ -10,7 +10,9 @@
        <?php
             if(isset($_POST["Tabulka"])){
                 $tabulka=$_POST["Tabulka"];
-                $vysledek=dotaz("SELECT * FROM $tabulka;");
+                $dotaz="SELECT * FROM ".safeString($tabulka).";";
+                echo "Vykonaný dotaz: $dotaz<br />";
+                $vysledek=dotaz($dotaz);
                 $radku=mysqli_num_rows($vysledek);
                 $sloupcu=mysqli_num_fields($vysledek);
                 echo "<table border='solid'>";

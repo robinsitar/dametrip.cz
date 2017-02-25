@@ -1,13 +1,10 @@
 <?php
     //TODO:
     //udělat nějakou zabezpečovací funkci, kterou se budou prohánět všechny user inputy.
-    //automatchování
     //uživatel musí mít
         //mezeru ve jméně
         //zavináč a tečku v mailu
         //věk mezi 1 - 120
-        //validované město původu
-        //validní destinaci
         //do budoucna jednu z povolených aktivit
 
     header('Content-type: text/html; charset=utf-8'); //kryštofův útržek :D
@@ -311,6 +308,28 @@ function pridejZCSV($soubor){ //ve formátu 0 Jméno, 1 Bydliště, 2 Destinace,
     }
     vypisTabulku($lidi);
     return $lidi;
+}
+
+//možná udělat export databáze do CSV
+
+function safeString($text){ //prostě odebrat uvozovky, středníky a podobné zbytečnosti, stejně nejsou potřeba...
+    global $link;
+    
+    $text=str_replace(";","",$text);
+    $text=str_replace("'","",$text);
+    $text=str_replace('"',"",$text);
+    $text=str_replace("&","",$text);
+    $text=str_replace("|","",$text);
+    $text=str_replace("*","",$text);
+    $text=str_replace("?","",$text);
+    $text=str_replace("_","",$text);
+    $text=str_replace("=","",$text);
+    
+    
+    if(!$link){$link=prihlasit();}
+    $text=mysqli_real_escape_string($link,$text);
+    return $text;
+    
 }
 
 function vypisTabulku($tabulka){
