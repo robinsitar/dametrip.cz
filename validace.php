@@ -9,7 +9,7 @@
         if($ok)
         {
             echo "váš email byl úspěšně ověřen!";
-            $id=mysqli_fetch_array(dotaz("SELECT Id WHERE Kod=$kod"))[0];
+            $id=mysqli_fetch_array(dotaz("SELECT Id FROM lidi WHERE Kod=$kod"))[0];
             $partak=matchni($id);
             if($partak[9]<=$range){
                 //v tomhle bodě se našel vhodný match a měl by se obou odeslat mail alá "nazdar, našli jsme vám strašně super parťáka" apod...

@@ -7,7 +7,7 @@
         //věk mezi 1 - 120
         //do budoucna jednu z povolených aktivit
 
-    header('Content-type: text/html; charset=utf-8'); //kryštofův útržek :D
+    //header('Content-type: text/html; charset=utf-8'); //kryštofův útržek :D
 
     $mysqlLogin="a148986_2";
     $mysqlHeslo="FmVW6LUj";
@@ -271,31 +271,15 @@
         fclose($fp);
     }
 
-    function poslimail($komu, $predmet, $zprava){
+    function posliMail($komu, $predmet, $zprava){
         loguj("byla zavolana funkce poslimail($komu, $predmet, $zprava )");
         
-        echo "<p style='background-color: red; color: white;padding: 5px;'>Milý majiteli emailu $komu. v této kritické chvíli vám měl přijít email s předmětem '$predmet', který by vám pověděl následující: '$zprava'. To, že vám nepřišel, je nám srdečné líto. Až se boj se zaměstnaneckou disciplínou opět dostane pod kontrolu, budete od nás emaily dostávat zase tak, jak by měli. Martin z Dámetripu</p>";
-        /*$from = '<team@dametrip.cz>'; //change this to your email address
-        $to = $komu; // change to address
-        $subject = $predmet; // subject of mail
-        $body = $zprava; //content of mail
-
-        $headers = array(
-            'From' => $from,
-            'To' => $to,
-            'Subject' => $subject
-        );
-
-        $smtp = Mail::factory('smtp', array(
-                'host' => 'smtp-148986.m86.wedos.net',
-                'port' => '465',
-                'auth' => true,
-                'username' => 'team@dametrip.cz', //your gmail account
-                'password' => 'Barbucha26' // your password
-            ));
-
-        // Send the mail
-        $mail = $smtp->send($to, $headers, $body);*/
+        $ok=mail($komu,$predmet,$zprava,"From: team@dametrip.cz");
+        if($ok){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 function pridejZCSV($soubor){ //ve formátu 0 Jméno, 1 Bydliště, 2 Destinace, 3 Email
