@@ -23,15 +23,16 @@
         dotaz($dotaz);
         $dotaz="CREATE TABLE lidi(
                 Id INT UNIQUE PRIMARY KEY,
-                Jmeno TEXT,
+                Jmeno VARCHAR,
                 Vek INT,
-                Email TEXT,
-                Bydliste TEXT,
-                Cinnost TEXT,
-                Destinace TEXT,
+                Email VARCHAR,
+                Bydliste VARCHAR,
+                Cinnost VARCHAR,
+                Destinace VARCHAR,
                 Validovano INT,
-                Kod TEXT,
-                Timestamp INT);";
+                Kod VARCHAR,
+                Timestamp INT,
+                Aktivni INT);";
         $ok1=dotaz($dotaz);
 
         /*$dotaz="DROP TABLE geocodes;";
@@ -63,7 +64,7 @@
             loguj("při přidávání uživatele nastala duplicita emailů");
             return false;
         }
-        $ok=dotaz("INSERT INTO lidi VALUES($nextId,'$Jmeno',$Vek,'$Email','$Bydliste','$Cinnost','$Destinace',0,$kod,$timestamp)");
+        $ok=dotaz("INSERT INTO lidi VALUES($nextId,'$Jmeno',$Vek,'$Email','$Bydliste','$Cinnost','$Destinace',0,$kod,$timestamp,0)");
 
         if($ok){
             posliMail($Email,"Dámetrip.cz - Potvrzení emailové adresy","http://beta.dametrip.cz/validace.php?kod=$kod");
@@ -86,14 +87,14 @@
         }
     }
 
-    function uprav($id, $Jmeno, $Vek, $Email,$Pohlavi, $Bydliste, $Cinnost, $Destinace, $Validovano, $Kod){
-        loguj("byla zavolana funkce uprav($id, $Jmeno, $Vek, $Email,$Pohlavi, $Bydliste, $Cinnost, $Destinace, $Validovano, $Kod)");
+    function uprav($id, $Jmeno, $Vek, $Email,$Pohlavi, $Bydliste, $Cinnost, $Destinace, $Validovano, $Kod, $aktivni){
+        loguj("byla zavolana funkce uprav($id, $Jmeno, $Vek, $Email,$Pohlavi, $Bydliste, $Cinnost, $Destinace, $Validovano, $Kod,$aktivni)");
         
         if($id=="" or !$id){return false;}
         $Bydliste=geocode($Bydliste);
         $Destinace=geocode($Destinace);
         $timestamp=time();
-        $ok=dotaz("UPDATE lidi SET Jmeno='$Jmeno', Vek='$Vek', Email='$Email', Pohlavi='$Pohlavi', Bydliste='$Bydliste', Cinnost='$Cinnost', Destinace='$Destinace', Validovano=$Validovano, Kod='$Kod', Timestamp='$timestamp' WHERE Id='$id';");
+        $ok=dotaz("UPDATE lidi SET Jmeno='$Jmeno', Vek='$Vek', Email='$Email', Pohlavi='$Pohlavi', Bydliste='$Bydliste', Cinnost='$Cinnost', Destinace='$Destinace', Validovano=$Validovano, Kod='$Kod', Timestamp='$timestamp', Aktivni='$aktivni' WHERE Id='$id';");
         if($ok){
             return true;
         }else{
@@ -103,7 +104,7 @@
 
     function validuj($kod){
         if(mysqli_num_rows(dotaz("SELECT Validovano FROM lidi WHERE Kod=$kod and Validovano=0"))==1){
-            $ok=dotaz("UPDATE lidi SET Validovano=1 WHERE Kod=$kod");
+            $ok=dotaz("UPDATE lidi SET Validovano=1, Aktivni=1 WHERE Kod=$kod");
             if($ok){
                 return true;
             }else{
@@ -284,7 +285,7 @@
     function posliMail($komu, $predmet, $zprava){
         loguj("byla zavolana funkce poslimail($komu, $predmet, $zprava )");
         
-        $ok=mail($komu,$predmet,$zprava,"From: team@dametrip.cz");
+        $ok=mail($komu,$predmet,$zprava,"From: team@dametrip.cz, Content-Type:text/plain;charset=utf-8");
         if($ok){
             return true;
         }else{
@@ -302,7 +303,7 @@ function pridejZCSV($soubor){ //ve formátu 0 Jméno, 1 Bydliště, 2 Destinace,
         if($clovek!=""){
             $lidi[$i]=explode(",",$clovek);        
         pridej($lidi[$i][0], 99, $lidi[$i][3], $lidi[$i][1], "nezadano", $lidi[$i][2]);    
-        $ok=dotaz("UPDATE lidi SET Validovano=1 WHERE Email='".$lidi[$i][3]."';");
+        $ok=dotaz("UPDATE lidi SET Validovano=1, Aktivni=1 WHERE Email='".$lidi[$i][3]."';");
         $i++;
         }
         else{
