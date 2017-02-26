@@ -19,24 +19,23 @@
             switch($ok){
                     true:
                         loguj("Uživatel úspěšně přidán");
+                        break;
                     false:
                         loguj("Přidání uživatele se nezdařilo!");
                         http_response_code(400);
+                        break;
                     "bydliste_nenalezeno":
                         loguj("Přidání uživatele se nezdařilo - bydliště nenalezeno");
                         http_response_code(401);
+                        break;
                     "destinace_nenalezena":
                         loguj("Přidání uživatele se nezdařilo - destinace nenalezena");
                         http_response_code(402);
+                        break;
                     "duplicita_emailu":
                         loguj("Přidání uživatele se nezdařilo - duplicita emailů");
                         http_response_code(403);
-            }
-            
-            if($ok==true) {
-            }
-            else {
-                
+                        break;
             }
         }
         else {
