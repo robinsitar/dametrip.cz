@@ -14,6 +14,7 @@
     $mysqlDatabase="d148986_2";
     $mysqlServer="wm133.wedos.net";
     $apiKey="AIzaSyBCJLPKH2GQ-uGV_F6B6gvVweFO_MQrbNQ";
+    $range=300; //prozatím kilometry, pozor, až se do toho začne mixovat nějaké další parametry alá delta věk, shodnost aktivit, tak už to bude spíš takovej index
 
     function inicializovat(){ //vyčistění databáze
         loguj("byla zavolana funkce inicializovat() - RESETUJE VŠECHNY TABULKY, kromě geocache");
@@ -58,6 +59,10 @@
         if(json_decode($Bydliste)->status =="ZERO_RESULTS" || json_decode($Destinace)->status =="ZERO_RESULTS"){
             return false;
         }
+        if(mysqli_num_rows(dotaz("SELECT * FROM lidi WHERE Email=$Email;"))>0){
+            loguj("při přidávání uživatele nastala duplicita emailů");
+            return false;
+        }
         $ok=dotaz("INSERT INTO lidi VALUES($nextId,'$Jmeno',$Vek,'$Email','$Bydliste','$Cinnost','$Destinace',0,$kod,$timestamp)");
 
         if($ok){
@@ -97,12 +102,17 @@
     }
 
     function validuj($kod){
-        $ok=dotaz("UPDATE lidi SET Validovano=1 WHERE Kod=$kod");
-        if($ok){
-            return true;
+        if(mysqli_num_rows(dotaz("SELECT Validovano FROM lidi WHERE Kod=$kod and Validovano=0"))==1){
+            $ok=dotaz("UPDATE lidi SET Validovano=1 WHERE Kod=$kod");
+            if($ok){
+                return true;
+            }else{
+                return false;
+            }    
         }else{
+            loguj("Uživatel už zvalidován");
             return false;
-        }
+        }        
     }
 
     function dotaz($dotaz){
@@ -317,6 +327,8 @@ function safeString($text){ //prostě odebrat uvozovky, středníky a podobné z
     $text=str_replace("?","",$text);
     $text=str_replace("_","",$text);
     $text=str_replace("=","",$text);
+    $text=str_replace("<","",$text);
+    $text=str_replace(">","",$text);
     
     
     if(!$link){$link=prihlasit();}
@@ -338,5 +350,8 @@ function vypisTabulku($tabulka){
     }
     echo "</table>";
 }
+
+dotaz("SET SESSION CHARACTER_SET_RESULTS=utf-8;");
+dotaz("SET SESSION CHARACTER_SET_CLIENT=utf-8;");
 
 ?>
