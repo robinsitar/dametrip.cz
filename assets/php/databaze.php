@@ -57,12 +57,15 @@
         $Bydliste=geocode($Bydliste);
         $Destinace=geocode($Destinace);
         $timestamp=time();
-        if(json_decode($Bydliste)->status =="ZERO_RESULTS" || json_decode($Destinace)->status =="ZERO_RESULTS"){
-            return false;
+        if(json_decode($Bydliste)->status =="ZERO_RESULTS"){
+            return "bydliste_nenalezeno";
+        }
+        if(json_decode($Destinace)->status =="ZERO_RESULTS"){
+            return "destinace_nenalezena";
         }
         if(mysqli_num_rows(dotaz("SELECT * FROM lidi WHERE Email='$Email';"))>0){
             loguj("při přidávání uživatele nastala duplicita emailů");
-            return false;
+            return "duplicita_emailu";
         }
         $ok=dotaz("INSERT INTO lidi VALUES($nextId,'$Jmeno',$Vek,'$Email','$Bydliste','$Cinnost','$Destinace',0,$kod,$timestamp,0)");
 
@@ -70,7 +73,7 @@
             posliMail($Email,"Dámetrip.cz - Potvrzení emailové adresy","http://beta.dametrip.cz/validace.php?kod=$kod");
             return true;
         }else{
-            return false;
+            return "false";
         }
 
     }

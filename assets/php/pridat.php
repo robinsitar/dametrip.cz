@@ -16,12 +16,27 @@
             $Destinace = safeString($_POST["Destinace"]);
             $ok = pridej($Jmeno, $Vek, $Email, $Bydliste, $Cinnost, $Destinace);
              
-            if($ok) {
-                loguj("Uživatel úspěšně přidán");
+            switch($ok){
+                    true:
+                        loguj("Uživatel úspěšně přidán");
+                    false:
+                        loguj("Přidání uživatele se nezdařilo!");
+                        http_response_code(400);
+                    "bydliste_nenalezeno":
+                        loguj("Přidání uživatele se nezdařilo - bydliště nenalezeno");
+                        http_response_code(401);
+                    "destinace_nenalezena":
+                        loguj("Přidání uživatele se nezdařilo - destinace nenalezena");
+                        http_response_code(402);
+                    "duplicita_emailu":
+                        loguj("Přidání uživatele se nezdařilo - duplicita emailů");
+                        http_response_code(403);
+            }
+            
+            if($ok==true) {
             }
             else {
-                loguj("Přidání uživatele se nezdařilo!");
-                http_response_code(400);
+                
             }
         }
         else {
