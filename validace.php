@@ -47,16 +47,16 @@
                 //v tomhle bodě se našel vhodný match a měl by se obou odeslat mail alá "nazdar, našli jsme vám strašně super parťáka" apod...
                 $partak = mysqli_fetch_array(dotaz("SELECT Id, Jmeno, Destinace, Bydliste, Email, Vek FROM lidi WHERE Id=".$partak[4].";"));
                 
-                posliMail($ja[4],"Dámetrip.cz - Našli jsme ti parťáka!","Ahoj ".$ja[1].",\nNašli jsme ti parťáka. Jmenuje se ".$partak[1].", je z ".geo2human($partak[3]).", je mu ".$partak[5]." a chce jet do ".geo2human($partak[2]).". \nNapiš mu na ".$partak[4]." a vyražte spolu na super trip!");
+                posliMail($ja[4],"Dámetrip.cz - Našli jsme ti parťáka!","Ahoj ".$ja[1].",<br />Našli jsme ti parťáka. Jmenuje se ".$partak[1].", je z ".geo2human($partak[3]).", je mu ".$partak[5]." a chce jet do ".geo2human($partak[2]).". <br />Napiš mu na ".$partak[4]." a vyražte spolu na super trip!");
                 
-                posliMail($partak[4],"Dámetrip.cz - Našli jsme ti parťáka!","Ahoj ".$partak[1].",\nNašli jsme ti parťáka. Jmenuje se ".$ja[1].", je z ".geo2human($ja[3]).", je mu ".$ja[5]." a chce jet do ".geo2human($ja[2]).". \nNapiš mu na ".$ja[4]." a vyražte spolu na super trip!");
+                posliMail($partak[4],"Dámetrip.cz - Našli jsme ti parťáka!","Ahoj ".$partak[1].",<br />Našli jsme ti parťáka. Jmenuje se ".$ja[1].", je z ".geo2human($ja[3]).", je mu ".$ja[5]." a chce jet do ".geo2human($ja[2]).". <br />Napiš mu na ".$ja[4]." a vyražte spolu na super trip!");
                 
                 dotaz("UPDATE lidi SET Aktivni=0 WHERE Id=".$ja[0].";");
                 dotaz("UPDATE lidi SET Aktivni=0 WHERE Id=".$partak[0].";");
             } 
             else {
                 //vhodného parťáka se najít nepodařilo... v podstatě teď tomuto uživateli nezbývá nic jiného, než čekat, až někdo pojede poblíž a vybere si ho jako parťáka
-                posliMail($ja[4],"Dámetrip.cz - Registrace dokončena!","Ahoj ".$ja[1].",\nVítej v Dámetripu! Bohužel se nám v tuto chvíli nepodařilo najít toho pravého parťáka. Každopádně hned jakmile ho najdeme, ozveme se na tento email. Nezapomeň tedy tento projekt sdílet, ať máš větší šanci narazit na toho pravého parťáka. \n \n S přáním krásných tripů, \n Team Dámetrip");
+                posliMail($ja[4],"Dámetrip.cz - Registrace dokončena!","Ahoj ".$ja[1].",<br />Vítej v Dámetripu! Bohužel se nám v tuto chvíli nepodařilo najít toho pravého parťáka. Každopádně hned jakmile ho najdeme, ozveme se na tento email. Nezapomeň tedy tento projekt sdílet, ať máš větší šanci narazit na toho pravého parťáka. <br /> <br /> S přáním krásných tripů, <br /> Team Dámetrip");
             }
             
         }

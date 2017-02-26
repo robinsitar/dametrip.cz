@@ -60,7 +60,7 @@
         if(json_decode($Bydliste)->status =="ZERO_RESULTS" || json_decode($Destinace)->status =="ZERO_RESULTS"){
             return false;
         }
-        if(mysqli_num_rows(dotaz("SELECT * FROM lidi WHERE Email=$Email;"))>0){
+        if(mysqli_num_rows(dotaz("SELECT * FROM lidi WHERE Email='$Email';"))>0){
             loguj("při přidávání uživatele nastala duplicita emailů");
             return false;
         }
@@ -241,7 +241,7 @@
 
 
         $ja=mysqli_fetch_array(dotaz("SELECT Destinace, Bydliste, Cinnost, Vek, Id FROM lidi WHERE Id='$id';"));
-        $vysledek=dotaz("SELECT Destinace, Bydliste, Cinnost, Vek, Id FROM lidi WHERE Id!='$id' and Validovano='1';");
+        $vysledek=dotaz("SELECT Destinace, Bydliste, Cinnost, Vek, Id FROM lidi WHERE Id!='$id' and Validovano='1' and Aktivni='1';");
         $kandidatu=mysqli_num_rows($vysledek);
         $min=100000000000000;//nahradit něčím jako float.max v C#
         for($x=0; $x<$kandidatu; $x++){
@@ -291,7 +291,14 @@
     function posliMail($komu, $predmet, $zprava){
         loguj("byla zavolana funkce poslimail($komu, $predmet, $zprava )");
         
-        $ok=mail($komu,$predmet,$zprava,"From: team@dametrip.cz; Content-Type:text/plain; charset=utf-8");
+        $hlavicka = "MIME-Version: 1.0" . "\r\n";
+        $hlavicka .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+        // More headers
+        $hlavicka .= 'From: <team@dametrip.cz>' . "\r\n";
+        
+        
+        $ok=mail($komu,$predmet,$zprava,$hlavicka);
         if($ok){
             return true;
         }else{
