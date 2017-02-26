@@ -23,14 +23,14 @@
         dotaz($dotaz);
         $dotaz="CREATE TABLE lidi(
                 Id INT UNIQUE PRIMARY KEY,
-                Jmeno VARCHAR,
+                Jmeno TEXT,
                 Vek INT,
-                Email VARCHAR,
-                Bydliste VARCHAR,
-                Cinnost VARCHAR,
-                Destinace VARCHAR,
+                Email TEXT,
+                Bydliste TEXT,
+                Cinnost TEXT,
+                Destinace TEXT,
                 Validovano INT,
-                Kod VARCHAR,
+                Kod TEXT,
                 Timestamp INT,
                 Aktivni INT);";
         $ok1=dotaz($dotaz);
