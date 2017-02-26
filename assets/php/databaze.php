@@ -286,7 +286,7 @@
     function posliMail($komu, $predmet, $zprava){
         loguj("byla zavolana funkce poslimail($komu, $predmet, $zprava )");
         
-        $ok=mail($komu,$predmet,$zprava,"From: team@dametrip.cz, Content-Type:text/plain;charset=utf-8");
+        $ok=mail($komu,$predmet,$zprava,"From: team@dametrip.cz; Content-Type:text/plain; charset=utf-8");
         if($ok){
             return true;
         }else{
