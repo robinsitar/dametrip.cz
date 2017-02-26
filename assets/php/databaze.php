@@ -195,7 +195,7 @@
 
     function geo2human($geo){
         
-        return mysqli_fetch_array(dotaz("SELECT Nazev WHERE Vysledek='$geo';"))[0];
+        return str_replace("+"," ",mysqli_fetch_array(dotaz("SELECT Nazev FROM geocodes WHERE Vysledek='$geo';"))[0]);
     }
 
     function vzdalenost($lat1,$lon1,$lat2,$lon2){
