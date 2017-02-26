@@ -193,6 +193,11 @@
         return json_decode($geo)->results[0]->formatted_address;
     }
 
+    function geo2human($geo){
+        
+        return mysqli_fetch_array(dotaz("SELECT Nazev WHERE Vysledek='$geo';"))[0];
+    }
+
     function vzdalenost($lat1,$lon1,$lat2,$lon2){
         loguj("byla zavolana funkce vzdalenost($lat1,$lon1,$lat2,$lon2)");
     
