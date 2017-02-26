@@ -51,10 +51,8 @@
                 
                 posliMail($partak[4],"Dámetrip.cz - Našli jsme ti parťáka!","Ahoj ".$partak[1].",\nNašli jsme ti parťáka. Jmenuje se ".$ja[1].", je z ".geo2name($ja[3]).", je mu ".$ja[5]." a chce jet do ".$ja[2].". \nNapiš mu na ".$ja[4]." a vyražte spolu na super trip!");
                 
-                smaz($ja[0]);
-                smaz($partak[0]);
-                
-                
+                dotaz("UPDATE lidi SET Aktivni=0 WHERE Id=".$ja[0]";");
+                dotaz("UPDATE lidi SET Aktivni=0 WHERE Id=".$partak[0]";");
             } 
             else {
                 //vhodného parťáka se najít nepodařilo... v podstatě teď tomuto uživateli nezbývá nic jiného, než čekat, až někdo pojede poblíž a vybere si ho jako parťáka
