@@ -122,6 +122,7 @@
         global $link;
 
         if(!$link){prihlasit();}
+        mysqli_set_charset($link, "utf8");
         $vysledek=mysqli_query($link, $dotaz);
         if($vysledek){
             loguj("Dotaz se zdařil");

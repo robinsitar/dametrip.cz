@@ -280,6 +280,9 @@ $(document).ready(function() {
                 type: "POST",
                 url: "./assets/php/pridat.php",
                 data: $("#mainForm").serialize(),
+                beforeSend: function() {
+                    $("#mainForm").off("submit");
+                },
                 success: function () {
                     $(".formularOtazkaWrapper.active").hide("slide", { direction: "left" }, 1000);
                     $(".formularDalsi").slideUp(1000);

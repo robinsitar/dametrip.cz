@@ -3831,10 +3831,21 @@ html, body {
     padding-top: 20px;
 }
 }
-.formularInner {
+.formularInner, .validaceInner {
     background-color: rgba(105, 105, 105, 0.9);
     height: 550px;
     position: relative;
+}
+.validaceInner {
+    height: 350px; 
+}
+.validaceZprava {
+    font-size: 25px;
+    padding-top: 70px;
+    padding-left: 25px;
+    padding-right: 25px;
+    color: white;
+    line-height: 30px;
 }
 .formularOtazka {
     padding-top: 145px;
