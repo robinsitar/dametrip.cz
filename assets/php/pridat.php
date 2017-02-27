@@ -17,22 +17,22 @@
             $ok = pridej($Jmeno, $Vek, $Email, $Bydliste, $Cinnost, $Destinace);
              
             switch($ok){
-                    true:
+                    case true:
                         loguj("Uživatel úspěšně přidán");
                         break;
-                    false:
+                    case false:
                         loguj("Přidání uživatele se nezdařilo!");
                         http_response_code(400);
                         break;
-                    "bydliste_nenalezeno":
+                    case "bydliste_nenalezeno":
                         loguj("Přidání uživatele se nezdařilo - bydliště nenalezeno");
                         http_response_code(401);
                         break;
-                    "destinace_nenalezena":
+                    case "destinace_nenalezena":
                         loguj("Přidání uživatele se nezdařilo - destinace nenalezena");
                         http_response_code(402);
                         break;
-                    "duplicita_emailu":
+                    case "duplicita_emailu":
                         loguj("Přidání uživatele se nezdařilo - duplicita emailů");
                         http_response_code(403);
                         break;
