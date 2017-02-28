@@ -11,7 +11,7 @@
         //do budoucna jednu z povolených aktivit
 
     function inicializovat(){ //vyčistění databáze
-        loguj("byla zavolana funkce inicializovat() - RESETUJE VŠECHNY TABULKY, kromě geocache a logu");
+        loguj("byla zavolana funkce inicializovat() - RESETUJE VŠECHNY TABULKY, kromě geocache a logu",100,"Reset");
         //tabulka uživatelů
         $dotaz="DROP TABLE lidi;";
         dotaz($dotaz);
