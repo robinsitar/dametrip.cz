@@ -17,9 +17,6 @@
             $ok = pridej($Jmeno, $Vek, $Email, $Bydliste, $Cinnost, $Destinace);
              
             switch($ok){
-                    case true:
-                        loguj("Uživatel úspěšně přidán");
-                        break;
                     case false:
                         loguj("Přidání uživatele se nezdařilo!");
                         http_response_code(400);
@@ -35,6 +32,9 @@
                     case "duplicita_emailu":
                         loguj("Přidání uživatele se nezdařilo - duplicita emailů");
                         http_response_code(403);
+                        break;
+                    case true:
+                        loguj("Uživatel úspěšně přidán");
                         break;
             }
         }
