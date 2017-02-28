@@ -79,7 +79,7 @@
         $ok=dotaz("INSERT INTO lidi VALUES($nextId,'$Jmeno',$Vek,'$Email','$Bydliste','$Cinnost','$Destinace',0,$kod,$timestamp,0)");
 
         if($ok){
-            posliMail($Email,"Dámetrip.cz - Potvrzení emailové adresy","http://beta.dametrip.cz/validace.php?kod=$kod");
+            posliMail($Email,"Dámetrip.cz - Potvrzení emailové adresy","http://dametrip.cz/validace.php?kod=$kod");
             return true;
         }else{
             return "false";
