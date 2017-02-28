@@ -1,8 +1,12 @@
 <?php
 
-    include "hesla.php";
+    //include "hesla.php";
+    $mysqlLogin="a148986_2";
+    $mysqlHeslo="FmVW6LUj";
+    $mysqlDatabase="d148986_2";
+    $mysqlServer="wm133.wedos.net";
+    $apiKey="AIzaSyBCJLPKH2GQ-uGV_F6B6gvVweFO_MQrbNQ";
     $range=300; //prozatím kilometry, pozor, až se do toho začne mixovat nějaké další parametry alá delta věk, shodnost aktivit, tak už to bude spíš takovej index
-    $emailLogSeverityTreshold=15;
     //TODO:
     //uživatel musí mít
         //mezeru ve jméně
@@ -296,14 +300,17 @@
         
         $timestamp=microtime(true);
         
-        if($dulezitost>=$emailLogSeverityTreshold){
-            posliMail("hajnina11@gmail.com","Dámetrip - Critical log event","$timestamp: '$zprava'. typ: $typ. Důležitost: $dulezitost'");
+        if(15<$dulezitost){
+            //posliMail("hajnina11@gmail.com","Dámetrip - Critical log event","$timestamp: '$zprava'. typ: $typ. Důležitost: $dulezitost'");
+            $hlavicka = "MIME-Version: 1.0" . "\r\n";
+            $hlavicka .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+            $hlavicka .= 'From: <systemlog@dametrip.cz>' . "\r\n";
+            $ok=mail("hajnina11@gmail.com","Dámetrip - Critical log event","$timestamp: '$zprava'. typ: $typ. Důležitost: $dulezitost'",$hlavicka);
         }
         
         if(!$link){
             $link=mysqli_connect($mysqlServer,$mysqlLogin, $mysqlHeslo);
             $ok=mysqli_select_db($link, $mysqlDatabase);
-            if($ok){echo "Připojení k databázi se podařilo";}
         }
         
         $zprava=mysqli_real_escape_string($link,$zprava);
