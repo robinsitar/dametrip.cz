@@ -122,24 +122,13 @@
         
         function kontrolOtazka() {
           if($(".formularInput.active").val() !== "" ) {
-              
-            if(indicator == true) {
                $(".formularInput.active").css("box-shadow","0 0 0 2px #04a204");
-               $(".formularImg.active").attr('src', 'images/animace.gif');
-               indicator = false;
-              
-            setTimeout(function() {
-                if($(".formularInput.active").val() !== "" ) {
-               $(".formularImg.active").attr('src', 'images/tick.png');
-                }
-            },1800)
-           }
+               $(".active .tickcross").addClass("active-menu");
           }
             
          else if($(".formularInput.active").val() == "") {
-                $(".formularImg.active").attr('src', 'images/cross.png');
-                $(".formularInput.active").css("box-shadow","0 0 0 2px #c75546");
-                indicator = true;
+                $(".formularInput.active").css("box-shadow","0 0 0 2px rgba(237, 73, 51, 1)");
+                $(".active .tickcross").removeClass("active-menu");
             }
             
         }
@@ -173,10 +162,6 @@
                 prevInput.focus();
                 activator = true;
             },1800)
-           var prevImg = prevOtazka.find(".formularImg");
-           prevImg.addClass("active");
-           $(".formularImg.active").attr('src', 'images/tick.png');
-           indicator = false;
 
            if($(".formularOtazkaWrapper.active").hasClass("prvni")){
                 $(".formularPredchozi").fadeOut(500);
@@ -228,21 +213,16 @@
                 nextInput.focus();
                 activator = true;
             },1800)
-            var nextImg = nextOtazka.find(".formularImg");
-            nextImg.addClass("active");
            }
              
             //Když zůstanou data 
             if($(".formularInput.active").val() !== "" ) {    
-               $(".formularImg.active").attr('src', 'images/tick.png');
+               $(".active .tickcross").addClass("active-menu");
                $(".formularInput.active").css("box-shadow","0 0 0 2px #04a204")
-               indicator = false;
            }
             
             else if($(".formularInput.active").val() == "") {
-                $(".formularImg.active").attr('src', 'images/cross.png');
                 $(".formularInput.active").css("box-shadow","0 0 0 2px #c75546");
-                indicator = true;
             }
                   
              
@@ -258,7 +238,7 @@
         })
         
         $("body").on("keyup",function(e) {   
-            if(e.keyCode == 13 || e.keyCode == 40) {
+            if(e.keyCode == 13) {
                 if($(".formularOtazkaWrapper.active").hasClass("posledni")) {
                     $("#mainForm").submit();
                  }
@@ -286,8 +266,23 @@ $(document).ready(function() {
                     $(".formularPredchozi").slideUp(1000);
                     $(".endingText").delay(1100).show("slide", { direction: "right" }, 1000);
                 },
-                error: function () {
-                    $(".formularError").show();
+                error: function (jqXHR) {
+                    if(jqXHR.status = 400) {
+                        $(".formularError").show();
+                    }
+                    if(jqXHR.status = 401) {
+                        $(".formularError").show().text("Zkontrolojte prosím vaše bydliště. Nedokážeme ho identifikovat.");
+                    }
+                    if(jqXHR.status = 402) {
+                        $(".formularError").show().text("Zkontrolojte prosím vaši destinaci. Nedokážeme ji identifikovat.");
+                    }
+                    if(jqXHR.status = 403) {
+                        $(".formularError").show().text("Zkontrolojte prosím váš email. Pod stejným je již někdo zaregistrován.");
+                    }
+                    else {
+                        $(".formularError").show(); 
+                    }
+                    
                 }
             });
          e.preventDefault();

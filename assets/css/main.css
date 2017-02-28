@@ -3917,15 +3917,6 @@ html, body {
     width: 12px;
     margin-top: 19px;
 }
-.formularImg {
-    display: inline-block;
-    width: 50px;
-    height: 40px;
-    position: absolute;
-    bottom: 20px;
-    margin-left: 8px;
-}
-
 .formularWrapper {
     position:relative;
 }
@@ -3943,4 +3934,52 @@ html, body {
     margin-top: 10px;
     color: rgba(237, 73, 51, 0.9);
     font-size: 16px;
+}
+.tickcross {
+    display: inline-block;
+    width: 50px;
+    height: 40px;
+    position: absolute;
+    bottom: 15px;
+    margin-left: 8px;
+}
+.tickcross span{
+    width: 35px;
+	height: 5px;
+	margin-bottom: 5px;
+	border-radius: 5px;
+	background: rgba(237, 73, 51, 1);
+	display: block;
+	-webkit-transition: 0.7s;
+	-moz-transition: 0.7s;
+	-o-transition: 0.7s;
+	transition: 0.7s;
+}
+.b1 {
+    transform: rotate(45deg) translate(8px, 6px);
+    -webkit-transform: rotate(45deg) translate(8px, 6px);
+    -moz-transform: rotate(45deg) translate(8px, 6px);
+    -o-transform: rotate(45deg) translate(8px, 6px);
+}
+.b2 {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+}
+.active-menu .b1 {
+    width: 20px;
+    transform: rotate(45deg) translate(11px, 9px);
+    -webkit-transform: rotate(45deg) translate(11px, 9px);
+    -moz-transform: rotate(45deg) translate(11px, 9px);
+    -o-transform: rotate(45deg) translate(11px, 9px);
+    background:rgb(4, 162, 4);
+}
+.active-menu .b2 {
+    margin-left: 11px;
+    transform: rotate(-48deg);
+    -webkit-transform: rotate(-48deg);
+    -moz-transform: rotate(-48deg);
+    -o-transform: rotate(-48deg);
+    background: rgb(4, 162, 4);
 }

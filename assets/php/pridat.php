@@ -44,7 +44,7 @@
     }
 
     else {
-        http_response_code(403); //Nebyl použit POST
+        http_response_code(405); //Nebyl použit POST
     }
     
 ?>
