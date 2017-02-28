@@ -1,19 +1,14 @@
 <?php
+
+    include "hesla.php";
+    $range=300; //prozatím kilometry, pozor, až se do toho začne mixovat nějaké další parametry alá delta věk, shodnost aktivit, tak už to bude spíš takovej index
+
     //TODO:
     //uživatel musí mít
         //mezeru ve jméně
         //zavináč a tečku v mailu
         //věk mezi 1 - 120
         //do budoucna jednu z povolených aktivit
-
-    //header('Content-type: text/html; charset=utf-8'); //kryštofův útržek :D
-
-    $mysqlLogin="a148986_2";
-    $mysqlHeslo="FmVW6LUj";
-    $mysqlDatabase="d148986_2";
-    $mysqlServer="wm133.wedos.net";
-    $apiKey="AIzaSyBCJLPKH2GQ-uGV_F6B6gvVweFO_MQrbNQ";
-    $range=300; //prozatím kilometry, pozor, až se do toho začne mixovat nějaké další parametry alá delta věk, shodnost aktivit, tak už to bude spíš takovej index
 
     function inicializovat(){ //vyčistění databáze
         loguj("byla zavolana funkce inicializovat() - RESETUJE VŠECHNY TABULKY, kromě geocache");
@@ -301,14 +296,16 @@
         
         if(!$link){
             $link=mysqli_connect($mysqlServer,$mysqlLogin, $mysqlHeslo);
-            $ok=mysqli_select_db($link, $mysqlDatabase);    
+            $ok=mysqli_select_db($link, $mysqlDatabase);
+            if($ok){echo "Připojení k databázi se podařilo";}
         }
-        $dotaz = $link->prepare("INSERT INTO log VALUES (:timestamp, :zprava, :dulezitost, :typ)");
-        $dotaz->bindParam(':timestamp', $timestamp);
-        $dotaz->bindParam(':zapis', $zprava);
-        $dotaz->bindParam(':dulezitost', $dulezitost);
-        $dotaz->bindParam(':typ', $typ);
-        mysqli_query($link,$dotaz);*/
+        
+        $zprava=mysqli_real_escape_string($link,$zprava);
+        $dulezitost=mysqli_real_escape_string($link,$dulezitost);
+        $typ=mysqli_real_escape_string($link,$typ);
+        
+        $dotaz="INSERT INTO log (Timestamp, Zprava, Dulezitost, Typ) VALUES ('$timestamp', '$zprava', $dulezitost, '$typ');";
+        mysqli_query($link,$dotaz);
     }
 
     function posliMail($komu, $predmet, $zprava){
