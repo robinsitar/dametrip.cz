@@ -1,6 +1,5 @@
 <?php
     //TODO:
-    //udělat nějakou zabezpečovací funkci, kterou se budou prohánět všechny user inputy.
     //uživatel musí mít
         //mezeru ve jméně
         //zavináč a tečku v mailu
@@ -34,6 +33,14 @@
                 Timestamp INT,
                 Aktivni INT);";
         $ok1=dotaz($dotaz);
+        
+        //$dotaz="DROP TABLE log;";
+        //dotaz($dotaz);
+        $dotaz="CREATE TABLE log(
+                Timestamp TEXT,
+                Message TEXT,
+                Importance INT);";
+        $ok2=dotaz($dotaz);
 
         /*$dotaz="DROP TABLE geocodes;";
         dotaz($dotaz);
@@ -91,7 +98,7 @@
     }
 
     function uprav($id, $Jmeno, $Vek, $Email,$Pohlavi, $Bydliste, $Cinnost, $Destinace, $Validovano, $Kod, $aktivni){
-        loguj("byla zavolana funkce uprav($id, $Jmeno, $Vek, $Email,$Pohlavi, $Bydliste, $Cinnost, $Destinace, $Validovano, $Kod,$aktivni)");
+        loguj("byla zavolana funkce uprav($id, $Jmeno, $Vek, $Email,$Pohlavi, $Bydliste, $Cinnost, $Destinace, $Validovano, $Kod, $aktivni)");
         
         if($id=="" or !$id){return false;}
         $Bydliste=geocode($Bydliste);
@@ -106,6 +113,8 @@
     }
 
     function validuj($kod){
+        loguj("byla zavolana funkce validuj($kod)");
+        
         if(mysqli_num_rows(dotaz("SELECT Validovano FROM lidi WHERE Kod=$kod and Validovano=0"))==1){
             $ok=dotaz("UPDATE lidi SET Validovano=1, Aktivni=1 WHERE Kod=$kod");
             if($ok){
@@ -197,6 +206,7 @@
     }
 
     function geo2human($geo){
+        loguj("byla zavolana funkce geo2human($geo)");        
         
         return str_replace("+"," ",mysqli_fetch_array(dotaz("SELECT Nazev FROM geocodes WHERE Vysledek='$geo';"))[0]);
     }
@@ -215,11 +225,12 @@
 
         //return rand(1,100);
         $vzdalenost=$R*$c;
-        loguj("Vzdálenost je $vzdalenost Km");
         return $vzdalenost;
     }
 
-    function vzdalenost2($lat1, $lon1, $lat2, $lon2){
+    function vzdalenost2($lat1, $lon1, $lat2, $lon2){  //smazat tuhle funkci, nebo vzdalenost. Jedna z nich nefunguje
+        loguj("byla zavolana funkce vzdalenost2($lat1,$lon1,$lat2,$lon2)");
+        
         $R=6371;
         $dLat=deg2rad($lat2-$lat1);
         $dLon=deg2rad($lon2-$lon1);
@@ -248,7 +259,7 @@
         $kandidatu=mysqli_num_rows($vysledek);
         $min=100000000000000;//nahradit něčím jako float.max v C#
         for($x=0; $x<$kandidatu; $x++){
-            loguj("Zvažuji kandidáta č. $x");
+            loguj("Zvažuji kandidáta č. $x", 1);
             
             $kandidat=mysqli_fetch_array($vysledek);
             $latJa=geo2lat($ja[0]);
@@ -282,13 +293,20 @@
         */
     }
 
-    function loguj($zapis){
-        //echo "$zapis<br />";
-        //chtělo by to zapisovat do csvčka
+    function loguj($zapis,$dulezitost=1){
+        global $mysqlLogin, $mysqlHeslo, $mysqlServer, $mysqlDatabase, $link;
+        
         $timestamp=microtime(true);
-        $fp=fopen("log.html","a");
-        fwrite($fp, "$timestamp: $zapis <hr/>");
-        fclose($fp);
+        $stmt = $dbh->prepare("INSERT INTO logVALUES (:timestamp, :zapis, :dulezitost)");
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':value', $value);
+        /*$dotaz="INSERT INTO log VALUES('$timestamp','$zapis',$dulezitost);";
+        
+        if(!$link){
+            $link=mysqli_connect($mysqlServer,$mysqlLogin, $mysqlHeslo);
+            $ok=mysqli_select_db($link, $mysqlDatabase);    
+        }
+        mysqli_query($link,$dotaz);*/
     }
 
     function posliMail($komu, $predmet, $zprava){
@@ -318,8 +336,8 @@ function pridejZCSV($soubor){ //ve formátu 0 Jméno, 1 Bydliště, 2 Destinace,
         $clovek=fgets($fp);
         if($clovek!=""){
             $lidi[$i]=explode(",",$clovek);        
-        pridej($lidi[$i][0], 99, $lidi[$i][3], $lidi[$i][1], "nezadano", $lidi[$i][2]);    
-        $ok=dotaz("UPDATE lidi SET Validovano=1, Aktivni=1 WHERE Email='".$lidi[$i][3]."';");
+        pridej($lidi[$i][0], 99, $lidi[$i][3], $lidi[$i][1], "nezadano", $lidi[$i][2],0);    
+        $ok=dotaz("UPDATE lidi SET Validovano=0, Aktivni=0 WHERE Email='".$lidi[$i][3]."';");
         $i++;
         }
         else{
@@ -333,6 +351,8 @@ function pridejZCSV($soubor){ //ve formátu 0 Jméno, 1 Bydliště, 2 Destinace,
 //možná udělat export databáze do CSV
 
 function safeString($text){ //prostě odebrat uvozovky, středníky a podobné zbytečnosti, stejně nejsou potřeba...
+    loguj("byla zavolana funkce safeString($text)"); //zabezpečit logovací funkci!!!!!!!!!!!!§
+    
     global $link;
     
     $text=str_replace(";","",$text);
