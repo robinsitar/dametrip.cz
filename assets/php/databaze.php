@@ -2,7 +2,7 @@
 
     include "hesla.php";
     $range=300; //prozatím kilometry, pozor, až se do toho začne mixovat nějaké další parametry alá delta věk, shodnost aktivit, tak už to bude spíš takovej index
-
+    $emailLogSeverityTreshold=15;
     //TODO:
     //uživatel musí mít
         //mezeru ve jméně
@@ -11,7 +11,7 @@
         //do budoucna jednu z povolených aktivit
 
     function inicializovat(){ //vyčistění databáze
-        loguj("byla zavolana funkce inicializovat() - RESETUJE VŠECHNY TABULKY, kromě geocache");
+        loguj("byla zavolana funkce inicializovat() - RESETUJE VŠECHNY TABULKY, kromě geocache a logu");
         //tabulka uživatelů
         $dotaz="DROP TABLE lidi;";
         dotaz($dotaz);
@@ -29,14 +29,16 @@
                 Aktivni INT);";
         $ok1=dotaz($dotaz);
         
-        //$dotaz="DROP TABLE log;";
-        //dotaz($dotaz);
+        /*
+        $dotaz="DROP TABLE log;";
+        dotaz($dotaz);
         $dotaz="CREATE TABLE log(
                 Timestamp TEXT,
                 Zprava TEXT,
                 Dulezitost INT,
                 Typ TEXT);";
         $ok2=dotaz($dotaz);
+        */
 
         /*$dotaz="DROP TABLE geocodes;";
         dotaz($dotaz);
@@ -54,7 +56,7 @@
     }
 
     function pridej($Jmeno, $Vek, $Email, $Bydliste, $Cinnost, $Destinace){ //přidá uživatele do databáze
-        loguj("byla zavolana funkce pridej($Jmeno, $Vek, $Email, $Bydliste, $Cinnost, $Destinace)");
+        loguj("byla zavolana funkce pridej($Jmeno, $Vek, $Email, $Bydliste, $Cinnost, $Destinace)",5,"PridaniUzivatele");
         $nextId=rand(0,999999999);
         $kod=rand(11111111,99999999);
         $Bydliste=geocode($Bydliste);
@@ -82,7 +84,7 @@
     }
 
     function smaz($id){
-        loguj("byla zavolana funkce smaz($id)");
+        loguj("byla zavolana funkce smaz($id)",5,"SmazaniUzivatele");
         
         if($id=="" or !$id){return false;}
         $ok=dotaz("DELETE FROM lidi WHERE Id='$id';");
@@ -94,7 +96,7 @@
     }
 
     function uprav($id, $Jmeno, $Vek, $Email,$Pohlavi, $Bydliste, $Cinnost, $Destinace, $Validovano, $Kod, $aktivni){
-        loguj("byla zavolana funkce uprav($id, $Jmeno, $Vek, $Email,$Pohlavi, $Bydliste, $Cinnost, $Destinace, $Validovano, $Kod, $aktivni)");
+        loguj("byla zavolana funkce uprav($id, $Jmeno, $Vek, $Email,$Pohlavi, $Bydliste, $Cinnost, $Destinace, $Validovano, $Kod, $aktivni)",5,"UpravaUzivatele");
         
         if($id=="" or !$id){return false;}
         $Bydliste=geocode($Bydliste);
@@ -109,7 +111,7 @@
     }
 
     function validuj($kod){
-        loguj("byla zavolana funkce validuj($kod)");
+        loguj("byla zavolana funkce validuj($kod)",1,"Funkce");
         
         if(mysqli_num_rows(dotaz("SELECT Validovano FROM lidi WHERE Kod=$kod and Validovano=0"))==1){
             $ok=dotaz("UPDATE lidi SET Validovano=1, Aktivni=1 WHERE Kod=$kod");
@@ -125,7 +127,7 @@
     }
 
     function dotaz($dotaz){
-        loguj("byla zavolana funkce dotaz($dotaz)");
+        loguj("byla zavolana funkce dotaz($dotaz)",2,"Dotaz");
         
         global $link;
 
@@ -144,7 +146,7 @@
     }
 
     function prihlasit(){
-        loguj("byla zavolana funkce prihlasit()");
+        loguj("byla zavolana funkce prihlasit()",1,"Funkce");
         
         global $mysqlLogin, $mysqlHeslo, $mysqlServer, $mysqlDatabase, $link;
 
@@ -154,7 +156,7 @@
     }
 
     function geocode($nazev){
-        loguj("byla zavolana funkce geocode($nazev)");
+        loguj("byla zavolana funkce geocode($nazev)",1,"Funkce");
         
         global $apiKey;
 
@@ -184,31 +186,31 @@
     }
 
     function geo2lat($geo){
-        loguj("byla zavolana funkce geo2lat($geo)");
+        loguj("byla zavolana funkce geo2lat($geo)",1,"Funkce");
         
         return json_decode($geo)->results[0]->geometry->location->lat;
     }
 
     function geo2lon($geo){
-        loguj("byla zavolana funkce geo2lon($geo)");
+        loguj("byla zavolana funkce geo2lon($geo)",1,"Funkce");
         
         return json_decode($geo)->results[0]->geometry->location->lng;
     }
 
     function geo2name($geo){
-        loguj("byla zavolana funkce geo2name($geo)");
+        loguj("byla zavolana funkce geo2name($geo)",1,"Funkce");
         
         return json_decode($geo)->results[0]->formatted_address;
     }
 
     function geo2human($geo){
-        loguj("byla zavolana funkce geo2human($geo)");        
+        loguj("byla zavolana funkce geo2human($geo)",1,"Funkce");        
         
         return str_replace("+"," ",mysqli_fetch_array(dotaz("SELECT Nazev FROM geocodes WHERE Vysledek='$geo';"))[0]);
     }
 
     function vzdalenost($lat1,$lon1,$lat2,$lon2){
-        loguj("byla zavolana funkce vzdalenost($lat1,$lon1,$lat2,$lon2)");
+        loguj("byla zavolana funkce vzdalenost($lat1,$lon1,$lat2,$lon2)",1,"Funkce");
     
         $R=6378;
         $lat2=deg2rad($lat2);
@@ -225,7 +227,7 @@
     }
 
     function vzdalenost2($lat1, $lon1, $lat2, $lon2){  //smazat tuhle funkci, nebo vzdalenost. Jedna z nich nefunguje
-        loguj("byla zavolana funkce vzdalenost2($lat1,$lon1,$lat2,$lon2)");
+        loguj("byla zavolana funkce vzdalenost2($lat1,$lon1,$lat2,$lon2)",1,"Funkce");
         
         $R=6371;
         $dLat=deg2rad($lat2-$lat1);
@@ -242,7 +244,7 @@
     }
 
     function matchni($id){ //zatím na základě součtu vzdáleností destinací a bydlišť bez vah
-        loguj("byla zavolana funkce matchni($id)");
+        loguj("byla zavolana funkce matchni($id)",4,"Matchovani");
         
         $iDestinace=1;
         $iBydliste=0;
@@ -294,6 +296,10 @@
         
         $timestamp=microtime(true);
         
+        if($dulezitost>=$emailLogSeverityTreshold){
+            posliMail("hajnina11@gmail.com","Dámetrip - Critical log event","$timestamp: '$zprava'. typ: $typ. Důležitost: $dulezitost'");
+        }
+        
         if(!$link){
             $link=mysqli_connect($mysqlServer,$mysqlLogin, $mysqlHeslo);
             $ok=mysqli_select_db($link, $mysqlDatabase);
@@ -308,14 +314,14 @@
         mysqli_query($link,$dotaz);
     }
 
-    function posliMail($komu, $predmet, $zprava){
-        loguj("byla zavolana funkce poslimail($komu, $predmet, $zprava )");
+    function posliMail($komu, $predmet, $zprava, $odesilatel="team@dametrip.cz"){
+        loguj("byla zavolana funkce poslimail($komu, $predmet, $zprava)",5,"Mail");
         
         $hlavicka = "MIME-Version: 1.0" . "\r\n";
         $hlavicka .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 
         // More headers
-        $hlavicka .= 'From: <team@dametrip.cz>' . "\r\n";
+        $hlavicka .= 'From: <'.$odesilatel.'>' . "\r\n";
         
         
         $ok=mail($komu,$predmet,$zprava,$hlavicka);
@@ -328,7 +334,7 @@
 
 function pridejZCSV($soubor){ //ve formátu 0 Jméno, 1 Bydliště, 2 Destinace, 3 Email
     //$Jmeno, $Vek, $Email, $Bydliste, $Cinnost, $Destinace - pořadí parametrů v přidávací funkci
-    loguj("byla zavolana funkce pridejZCSV($soubor)");
+    loguj("byla zavolana funkce pridejZCSV($soubor)",10,"Funkce");
     $fp=fopen($soubor,"r");
     $i=0;
     while (true){
@@ -350,7 +356,7 @@ function pridejZCSV($soubor){ //ve formátu 0 Jméno, 1 Bydliště, 2 Destinace,
 //možná udělat export databáze do CSV
 
 function safeString($text){ //prostě odebrat uvozovky, středníky a podobné zbytečnosti, stejně nejsou potřeba...
-    loguj("byla zavolana funkce safeString($text)"); //zabezpečit logovací funkci!!!!!!!!!!!!§
+    loguj("byla zavolana funkce safeString($text)",1,"Funkce"); //zabezpečit logovací funkci!!!!!!!!!!!!§
     
     global $link;
     
@@ -374,7 +380,7 @@ function safeString($text){ //prostě odebrat uvozovky, středníky a podobné z
 }
 
 function vypisTabulku($tabulka){
-    loguj("byla zavolana funkce vypisTabulku($tabulka)");
+    loguj("byla zavolana funkce vypisTabulku($tabulka)",1,"Funkce");
     
     echo "<table border='solid'>";
     for($y=0; $y<sizeof($tabulka); $y++){
