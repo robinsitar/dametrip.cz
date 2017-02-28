@@ -38,8 +38,9 @@
         //dotaz($dotaz);
         $dotaz="CREATE TABLE log(
                 Timestamp TEXT,
-                Message TEXT,
-                Importance INT);";
+                Zprava TEXT,
+                Dulezitost INT,
+                Typ TEXT);";
         $ok2=dotaz($dotaz);
 
         /*$dotaz="DROP TABLE geocodes;";
@@ -272,7 +273,7 @@
             $latKandidat=geo2lat($kandidat[1]);
             $lonKandidat=geo2lon($kandidat[1]);
             $kandidat[6]=vzdalenost($latKandidat,$lonKandidat,$latJa,$lonJa);; //vzájemná vzdálesnost bydlišť
-            if($kandidat[2]==$ja[2]){$kandidat[7]=0;}else{$kandidat[7]=1;} //shodují se aktivity?
+            if($kandidat[2]==$ja[2]){$kandidat[7]=0;}else{$kandidat[7]=1;} //shodují se aktivity? 0 znamená shodu
             $kandidat[8]=abs($kandidat[3]-$ja[3]); //rozdíl věku
             $kandidat[9]=$kandidat[5]*$iDestinace+$kandidat[6]*$iBydliste+$kandidat[7]*$iCinnost+$kandidat[8]*$iVek;
             if($kandidat[9]<$min){$min=$kandidat[9]; $match=$kandidat;}
@@ -293,19 +294,20 @@
         */
     }
 
-    function loguj($zapis,$dulezitost=1){
+    function loguj($zprava,$dulezitost=1,$typ="nespecifikovano"){
         global $mysqlLogin, $mysqlHeslo, $mysqlServer, $mysqlDatabase, $link;
         
         $timestamp=microtime(true);
-        $stmt = $dbh->prepare("INSERT INTO logVALUES (:timestamp, :zapis, :dulezitost)");
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':value', $value);
-        /*$dotaz="INSERT INTO log VALUES('$timestamp','$zapis',$dulezitost);";
         
         if(!$link){
             $link=mysqli_connect($mysqlServer,$mysqlLogin, $mysqlHeslo);
             $ok=mysqli_select_db($link, $mysqlDatabase);    
         }
+        $dotaz = $link->prepare("INSERT INTO log VALUES (:timestamp, :zprava, :dulezitost, :typ)");
+        $dotaz->bindParam(':timestamp', $timestamp);
+        $dotaz->bindParam(':zapis', $zprava);
+        $dotaz->bindParam(':dulezitost', $dulezitost);
+        $dotaz->bindParam(':typ', $typ);
         mysqli_query($link,$dotaz);*/
     }
 
