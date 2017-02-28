@@ -303,7 +303,6 @@
         if(!$link){
             $link=mysqli_connect($mysqlServer,$mysqlLogin, $mysqlHeslo);
             $ok=mysqli_select_db($link, $mysqlDatabase);
-            if($ok){echo "Připojení k databázi se podařilo";}
         }
         
         $zprava=mysqli_real_escape_string($link,$zprava);
