@@ -98,39 +98,21 @@
             kontrolOtazka();
         }) 
        
-        $(".formularDalsiWrapper").hover(function() {
-            $(".formularDalsiSipka").animate({"marginTop":"34px"},300)
-        },function() {
-            $(".formularDalsiSipka").animate({"marginTop":"20px"},150)
-        })
-        
-        $(".formularDalsiWrapper").hover(function() {
-                    $(".formularKonecnaSipka").animate({"marginLeft":"30px"},300)
-        },function() {
-                    $(".formularKonecnaSipka").animate({"marginLeft":"0px"},150)
-        })
-        
-        $(".formularPredchozi").hover(function() {
-            $(".formularPredchoziSipka").animate({"marginTop":"0px"},400)
-        },function() {
-            $(".formularPredchoziSipka").animate({"marginTop":"19px"},150)
-        })
-        
-        $(".formlularDalsi").click(function() {
-            
-        })
         
         function kontrolOtazka() {
           if($(".formularInput.active").val() !== "" ) {
                $(".formularInput.active").css("box-shadow","0 0 0 2px #04a204");
                $(".active .tickcross").addClass("active-menu");
+              
+               $(".tickcross.active-menu").on("click", function() {
+                    nextOtazka()
+               })
           }
             
          else if($(".formularInput.active").val() == "") {
                 $(".formularInput.active").css("box-shadow","0 0 0 2px rgba(237, 73, 51, 1)");
                 $(".active .tickcross").removeClass("active-menu");
             }
-            
         }
         kontrolOtazka();
         
@@ -219,6 +201,10 @@
             if($(".formularInput.active").val() !== "" ) {    
                $(".active .tickcross").addClass("active-menu");
                $(".formularInput.active").css("box-shadow","0 0 0 2px #04a204")
+               
+               $(".tickcross.active-menu").on("click", function() {
+                    nextOtazka()
+               })
            }
             
             else if($(".formularInput.active").val() == "") {
@@ -234,6 +220,10 @@
         })        
 
         $(".formularDalsiWrapper").on("click", function() {
+            nextOtazka()
+        })
+        
+        $(".tickcross.active-menu").on("click", function() {
             nextOtazka()
         })
         

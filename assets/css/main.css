@@ -3888,10 +3888,18 @@ html, body {
 }
 .formularDalsiSipka {
     margin-top: 20px;
+    transition: 0.4s;
 }
 .formularKonecnaSipka {
     margin-top: 20px;
     display: none;
+    transition: 0.4s;
+}
+.formularDalsiWrapper:hover .formularDalsiSipka {
+    margin-top: 30px;
+}
+.formularDalsiWrapper:hover .formularKonecnaSipka {
+    margin-left: 25px;
 }
 .formularPredchozi {
     height: 100px;
@@ -3916,6 +3924,10 @@ html, body {
     height: 12px;
     width: 12px;
     margin-top: 19px;
+    transition: 0.4s;
+}
+.formularPredchozi:hover .formularPredchoziSipka {
+    margin-top: 8px;
 }
 .formularWrapper {
     position:relative;
@@ -3969,10 +3981,10 @@ html, body {
 }
 .active-menu .b1 {
     width: 20px;
-    transform: rotate(45deg) translate(11px, 9px);
-    -webkit-transform: rotate(45deg) translate(11px, 9px);
-    -moz-transform: rotate(45deg) translate(11px, 9px);
-    -o-transform: rotate(45deg) translate(11px, 9px);
+    transform: rotate(45deg) translate(12px, 9px);
+    -webkit-transform: rotate(45deg) translate(12px, 9px);
+    -moz-transform: rotate(45deg) translate(12px, 9px);
+    -o-transform: rotate(45deg) translate(12px, 9px);
     background:rgb(4, 162, 4);
 }
 .active-menu .b2 {
