@@ -28,7 +28,7 @@
 						<div class="inner">
                             <div class="formular">
                                 <h2 class="formularHeading">VALIDACE</h2>
-                            </div>
+                            </div>e 
                             <div class="validaceInner">
                                 <p class="validaceZprava">
     <?php
@@ -41,15 +41,18 @@
     
         if($ok) {
             echo "Váš email byl úspěšně ověřen! <br> Koukněte se na email, jak jste dopadli v hledání parťáka. <br> Pokud se nám nepodařilo vám někoho najít, nezoufejte a nezapomeňte tento projekt sdílet, ať máte větší šanci někoho poznat a vydat se s ním na dobrodružství :) ";
-            $ja = mysqli_fetch_array(dotaz("SELECT Id, Jmeno, Destinace, Bydliste, Email, Vek FROM lidi WHERE Kod=$kod"));
+            $ja = mysqli_fetch_array(dotaz("SELECT Id, Jmeno, Destinace, Bydliste, Email, Vek, Aktivita FROM lidi WHERE Kod=$kod"));
             $partak = matchni($ja[0]);
             if($partak && $partak[9]<=$range) {
                 //v tomhle bodě se našel vhodný match a měl by se obou odeslat mail alá "nazdar, našli jsme vám strašně super parťáka" apod...
-                $partak = mysqli_fetch_array(dotaz("SELECT Id, Jmeno, Destinace, Bydliste, Email, Vek FROM lidi WHERE Id=".$partak[4].";"));
+                $partak = mysqli_fetch_array(dotaz("SELECT Id, Jmeno, Destinace, Bydliste, Email, Vek, Aktivita FROM lidi WHERE Id=".$partak[4].";"));
                 
                 posliMail($ja[4],"Dámetrip.cz - Našli jsme ti parťáka!","Ahoj ".$ja[1].",<br />Našli jsme ti parťáka. Jmenuje se ".$partak[1].", je z ".geo2human($partak[3]).", je mu ".$partak[5]." a chce jet do ".geo2human($partak[2]).". <br />Napiš mu na ".$partak[4]." a vyražte spolu na super trip!");
                 
                 posliMail($partak[4],"Dámetrip.cz - Našli jsme ti parťáka!","Ahoj ".$partak[1].",<br />Našli jsme ti parťáka. Jmenuje se ".$ja[1].", je z ".geo2human($ja[3]).", je mu ".$ja[5]." a chce jet do ".geo2human($ja[2]).". <br />Napiš mu na ".$ja[4]." a vyražte spolu na super trip!");
+                
+                //infomail adminovi - až bude větší počet uživatelů, tak zrušit... zatím je to super na tweakování matchovací funkce
+                posliMail($adminMail,"Dámetrip.cz - Parťáci spojeni","Spojila jsem další pár!\nPrvní týpek se jmenuje ".$ja[1].", je z ".geo2human($ja[3])." a jede do ".geo2human($ja[2]).". Je mu ".$ja[5]." a chce tam ".$ja[6]."\nDruhý týpek se jmenuje ".$partak[1].", je z ".geo2human($partak[3])." a jede do ".geo2human($partak[2]).". Je mu ".$partak[5]." a chce tam ".$partak[6]."\nAdios!","sylvia@dametrip.cz");
                 
                 dotaz("UPDATE lidi SET Aktivni=0 WHERE Id=".$ja[0].";");
                 dotaz("UPDATE lidi SET Aktivni=0 WHERE Id=".$partak[0].";");
