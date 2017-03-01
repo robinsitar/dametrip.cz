@@ -6,6 +6,7 @@
     $mysqlDatabase="d148986_2";
     $mysqlServer="wm133.wedos.net";
     $apiKey="AIzaSyBCJLPKH2GQ-uGV_F6B6gvVweFO_MQrbNQ";
+    $adminMail="hajnina11@gmail.com";
     $range=300; //prozatím kilometry, pozor, až se do toho začne mixovat nějaké další parametry alá delta věk, shodnost aktivit, tak už to bude spíš takovej index
     //TODO:
     //uživatel musí mít
@@ -304,8 +305,8 @@
             //posliMail("hajnina11@gmail.com","Dámetrip - Critical log event","$timestamp: '$zprava'. typ: $typ. Důležitost: $dulezitost'");
             $hlavicka = "MIME-Version: 1.0" . "\r\n";
             $hlavicka .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-            $hlavicka .= 'From: <systemlog@dametrip.cz>' . "\r\n";
-            $ok=mail("hajnina11@gmail.com","Dámetrip - Critical log event","$timestamp: '$zprava'. typ: $typ. Důležitost: $dulezitost'",$hlavicka);
+            $hlavicka .= 'From: <gordon@dametrip.cz>' . "\r\n";
+            $ok=mail($adminMail,"Dámetrip - Level $dulezitost critical log event","$timestamp: '$zprava'. typ: $typ. Důležitost: $dulezitost'",$hlavicka);
         }
         
         if(!$link){
@@ -400,7 +401,7 @@ function vypisTabulku($tabulka){
     echo "</table>";
 }
 
-dotaz("SET SESSION CHARACTER_SET_RESULTS=utf-8;");
-dotaz("SET SESSION CHARACTER_SET_CLIENT=utf-8;");
+//dotaz("SET SESSION CHARACTER_SET_RESULTS=utf-8;");
+//dotaz("SET SESSION CHARACTER_SET_CLIENT=utf-8;");
 
 ?>
