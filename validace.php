@@ -28,7 +28,7 @@
 						<div class="inner">
                             <div class="formular">
                                 <h2 class="formularHeading">VALIDACE</h2>
-                            </div>e 
+                            </div>
                             <div class="validaceInner">
                                 <p class="validaceZprava">
     <?php
