@@ -2,7 +2,7 @@
 
     //include "hesla.php";
     $mysqlLogin="a148986_2";
-    $mysqlHeslo="FmVW6LUj";
+    $mysqlHeslo="HESLO_SEM";
     $mysqlDatabase="d148986_2";
     $mysqlServer="wm133.wedos.net";
     $apiKey="AIzaSyBCJLPKH2GQ-uGV_F6B6gvVweFO_MQrbNQ";
@@ -59,7 +59,7 @@
 
     }
 
-    function pridej($Jmeno, $Vek, $Email, $Bydliste, $Cinnost, $Destinace){ //přidá uživatele do databáze
+    function pridej($Jmeno, $Vek, $Email, $Bydliste, $Cinnost, $Destinace,$predaktivovat=false){ //přidá uživatele do databáze
         loguj("byla zavolana funkce pridej($Jmeno, $Vek, $Email, $Bydliste, $Cinnost, $Destinace)",5,"PridaniUzivatele");
         $nextId=rand(0,999999999);
         $kod=rand(11111111,99999999);
@@ -79,7 +79,12 @@
         $ok=dotaz("INSERT INTO lidi VALUES($nextId,'$Jmeno',$Vek,'$Email','$Bydliste','$Cinnost','$Destinace',0,$kod,$timestamp,0)");
 
         if($ok){
-            posliMail($Email,"Dámetrip.cz - Potvrzení emailové adresy","http://dametrip.cz/validace.php?kod=$kod");
+            if($predaktivovat==false){
+                posliMail($Email,"Dámetrip.cz - Potvrzení emailové adresy","http://dametrip.cz/validace.php?kod=$kod");    
+            }
+            else{
+                validuj($kod);
+            }
             return true;
         }else{
             return "false";
@@ -348,9 +353,9 @@ function pridejZCSV($soubor){ //ve formátu 0 Jméno, 1 Bydliště, 2 Destinace,
         $clovek=fgets($fp);
         if($clovek!=""){
             $lidi[$i]=explode(",",$clovek);        
-        pridej($lidi[$i][0], 99, $lidi[$i][3], $lidi[$i][1], "nezadano", $lidi[$i][2],0);    
-        $ok=dotaz("UPDATE lidi SET Validovano=0, Aktivni=0 WHERE Email='".$lidi[$i][3]."';");
-        $i++;
+            pridej($lidi[$i][0], $lidi[$i][1], $lidi[$i][2], $lidi[$i][3], $lidi[$i][4], $lidi[$i][5],true);    
+            $ok=dotaz("UPDATE lidi SET Validovano=0, Aktivni=0 WHERE Email='".$lidi[$i][3]."';");
+            $i++;
         }
         else{
             break;

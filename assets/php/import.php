@@ -2,7 +2,7 @@
     <body>
         <?php
             include "databaze.php";
-            pridejZCSV("final.csv");
+            pridejZCSV("lidi.csv");
         ?>
     </body>
 </html>
