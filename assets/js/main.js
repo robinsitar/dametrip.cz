@@ -100,7 +100,7 @@
        
         
         function kontrolOtazka() {
-          if($(".formularInput.active").val() !== "" ) {
+          if(kontrolActiveOtazka()) {
                $(".formularInput.active").css("box-shadow","0 0 0 2px #04a204");
                $(".active .tickcross").addClass("active-menu");
               
@@ -109,17 +109,39 @@
                })
           }
             
-         else if($(".formularInput.active").val() == "") {
+         else if(kontrolActiveOtazka() == false) {
                 $(".formularInput.active").css("box-shadow","0 0 0 2px rgba(237, 73, 51, 1)");
                 $(".active .tickcross").removeClass("active-menu");
             }
         }
         kontrolOtazka();
+
+        function validateEmail(email) {
+                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(email);
+        }
+
+        function kontrolActiveOtazka() {
+                var check = false;
+                var value = $(".formularInput.active").val(); 
+                if(value !== "" && activator == true) {
+                    check = true;
+                }
+                else {
+                    check = false;
+                }
+                if($(".formularOtazkaWrapper.active").hasClass("email")) {
+                    check = validateEmail(value);
+                }
+            
+                return check;
+        }
         
         //PREDESLA OTAZKA
         activator = true;
         function prevOtazka() {
           if(activator == true) {
+              
            if($(".formularOtazkaWrapper.active").hasClass("posledni")){
                 $(".formularDalsiText").text("Další Otázka");
                 $(".formularKonecnaSipka").hide(); //Prepinani z konečného submitu
@@ -141,8 +163,8 @@
            var prevInput = prevOtazka.find(".formularInput");
            prevInput.addClass("active");
            setTimeout(function() {
-                prevInput.focus();
                 activator = true;
+                prevInput.focus();
             },1800)
 
            if($(".formularOtazkaWrapper.active").hasClass("prvni")){
@@ -153,7 +175,7 @@
         
         //DALSI OTAZKA
         function nextOtazka() {
-         if($(".formularInput.active").val() !== "" && activator == true) {
+         if(kontrolActiveOtazka()) {
              
             if($(".formularOtazkaWrapper.active").hasClass("prvni")){
                 $(".formularPredchozi").fadeIn(500);
@@ -192,8 +214,8 @@
             var nextInput = nextOtazka.find(".formularInput");
             nextInput.addClass("active");
             setTimeout (function() {
-                nextInput.focus();
                 activator = true;
+                nextInput.focus();
             },1800)
            }
              
