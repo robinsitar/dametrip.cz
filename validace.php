@@ -41,11 +41,11 @@
     
         if($ok) {
             echo "Váš email byl úspěšně ověřen! <br> Koukněte se na email, jak jste dopadli v hledání parťáka. <br> Pokud se nám nepodařilo vám někoho najít, nezoufejte a nezapomeňte tento projekt sdílet, ať máte větší šanci někoho poznat a vydat se s ním na dobrodružství :) ";
-            $ja = mysqli_fetch_array(dotaz("SELECT Id, Jmeno, Destinace, Bydliste, Email, Vek, Aktivita FROM lidi WHERE Kod=$kod"));
+            $ja = mysqli_fetch_array(dotaz("SELECT Id, Jmeno, Destinace, Bydliste, Email, Vek, Cinnost FROM lidi WHERE Kod= $kod"));
             $partak = matchni($ja[0]);
             if($partak && $partak[9]<=$range) {
                 //v tomhle bodě se našel vhodný match a měl by se obou odeslat mail alá "nazdar, našli jsme vám strašně super parťáka" apod...
-                $partak = mysqli_fetch_array(dotaz("SELECT Id, Jmeno, Destinace, Bydliste, Email, Vek, Aktivita FROM lidi WHERE Id=".$partak[4].";"));
+                $partak = mysqli_fetch_array(dotaz("SELECT Id, Jmeno, Destinace, Bydliste, Email, Vek, Cinnost FROM lidi WHERE Id=".$partak[4].";"));
                 
                 posliMail($ja[4],"Dámetrip.cz - Našli jsme ti parťáka!","Ahoj ".$ja[1].",<br />Našli jsme ti parťáka. Jmenuje se ".$partak[1].", je z ".geo2human($partak[3]).", je mu ".$partak[5]." a chce jet do ".geo2human($partak[2]).". <br />Napiš mu na ".$partak[4]." a vyražte spolu na super trip!");
                 
